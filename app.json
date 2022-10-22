@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "frresumake",
-    "slug": "frresumake",
+    "slug": "fresumake",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,10 +24,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.frmostafa.fresumake"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b7e52502-8865-494e-a2a2-3b07974b8938"
+      }
     }
   }
 }
