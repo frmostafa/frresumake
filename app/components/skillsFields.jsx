@@ -12,10 +12,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { cvsContext } from "../context/cvsContext";
 import DataListItem from "./dataListItem";
 
-export default function SkillsFields() {
-    const [number, setNumber] = useState("");
-    const { firstCv, setFirstCv } = useContext(cvsContext);
-
+export default function SkillsFields({ onPressNext }) {
+  const [number, setNumber] = useState("");
+  const [cvContext] = useContext(cvsContext);
 
   return (
     <View style={styles.detail}>
@@ -23,10 +22,10 @@ export default function SkillsFields() {
       <Text style={styles.secondaryText}>
         we recommend to add the most recent 2 companies that you have work for
       </Text>
-      {firstCv.data['skill'].map((item) =>(
-          <DataListItem key={item.id} data={item} />
-        ))}
- 
+      {cvContext.data["skill"].map((item) => (
+        <DataListItem key={item.id} data={item} />
+      ))}
+
       <TouchableOpacity onPress={() => console.log("add new")}>
         <View style={styles.addNewBtn}>
           <MaterialCommunityIcons
@@ -37,6 +36,15 @@ export default function SkillsFields() {
           <Text style={styles.addBtnText}>add new skill</Text>
         </View>
       </TouchableOpacity>
+      <TouchableHighlight
+        underlayColor="#fff"
+        style={styles.touchablebutton}
+        onPress={onPressNext}
+      >
+        <View style={styles.mainbtn}>
+          <Text style={styles.btntext}>NEXT</Text>
+        </View>
+      </TouchableHighlight>
     </View>
   );
 }
@@ -60,11 +68,29 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop : 30
+    marginTop: 30,
   },
   addBtnText: {
     fontSize: 22,
     color: "dodgerblue",
     marginHorizontal: 1,
+  },
+  mainbtn: {
+    borderRadius: 30,
+    width: "100%",
+    backgroundColor: "dodgerblue",
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 10,
+    shadowColor: "#52006A",
+    elevation: 10,
+  },
+  btntext: {
+    color: "white",
+    fontSize: 24,
+  },
+  touchablebutton: {
+    overlayColor: "#fff",
   },
 });

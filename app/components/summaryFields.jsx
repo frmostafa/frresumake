@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import AppTextInput from "./inputs/appTextInput";
-export default function SummaryFields() {
+export default function SummaryFields({ onPressNext }) {
   const [number, setNumber] = useState("");
 
   return (
@@ -15,6 +15,15 @@ export default function SummaryFields() {
         onChangeText={(newText) => setNumber(newText)}
         value={number}
       />
+      <TouchableOpacity
+        underlayColor="#fff"
+        style={styles.touchablebutton}
+        onPress={onPressNext}
+      >
+        <View style={styles.mainbtn}>
+          <Text style={styles.btntext}>NEXT</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -33,5 +42,23 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     marginBottom: 40,
     fontSize: 16,
+  },
+  mainbtn: {
+    borderRadius: 30,
+    width: "100%",
+    backgroundColor: "dodgerblue",
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 10,
+    shadowColor: "#52006A",
+    elevation: 10,
+  },
+  btntext: {
+    color: "white",
+    fontSize: 24,
+  },
+  touchablebutton: {
+    overlayColor: "#fff",
   },
 });

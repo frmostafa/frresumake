@@ -5,7 +5,7 @@ import { cvsContext } from "../../context/cvsContext";
 
 export default function AppTextInput({ icon, label, name, ...otherProps }) {
   const [inputValue, setInputValue] = useState("");
-  const { firstCv, setFirstCv } = useContext(cvsContext);
+  const [cvContext, setCvContext] = useContext(cvsContext);
 
   return (
     <View style={styles.textInputContainer}>
@@ -20,10 +20,10 @@ export default function AppTextInput({ icon, label, name, ...otherProps }) {
       <TextInput
         onChangeText={(newText) => {
           setInputValue(newText);
-          firstCv[name] = newText;
-          setFirstCv(firstCv);
+          cvContext[name] = newText;
+          setCvContext(cvContext);
         }}
-        value={firstCv[name] ? firstCv[name] : inputValue}
+        value={cvContext[name] ? cvContext[name] : inputValue}
         placeholder={label}
         style={styles.textInput}
         {...otherProps}

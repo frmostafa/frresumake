@@ -6,14 +6,17 @@ import Basicdetail from "./app/screen/basicdetail";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ShowCv from "./app/screen/showCv";
-import { cvs, cvsContext } from "./app/context/cvsContext";
+import { currentcv, cvsContext } from "./app/context/cvsContext";
 import ManageCvs from "./app/screen/manageCvs";
+import { useState } from "react";
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const [cvContext, setCvContext] = useState(currentcv);
+
   return (
-    <cvsContext.Provider value={cvs}>
+    <cvsContext.Provider value={[cvContext, setCvContext]}>
       <NavigationContainer>
         <Tab.Navigator
           screenOptions={({ route }) => ({
@@ -23,10 +26,11 @@ export default function App() {
                 iconName = focused ? "pencil-box" : "pencil-box-outline";
               } else if (route.name === "show") {
                 iconName = focused ? "view-list" : "view-list-outline";
-              }else if (route.name === "manage") {
-                iconName = focused ? "clipboard-edit" : "clipboard-edit-outline";
+              } else if (route.name === "manage") {
+                iconName = focused
+                  ? "clipboard-edit"
+                  : "clipboard-edit-outline";
               }
-              
 
               // You can return any component that you like here!
               return (

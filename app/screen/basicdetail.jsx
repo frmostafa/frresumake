@@ -16,14 +16,13 @@ import SkillsFields from "../components/skillsFields";
 import StepListItem from "../components/stepListItem";
 import SummaryFields from "../components/summaryFields";
 import WorkFields from "../components/workFields";
-import { cvsContext } from "../context/cvsContext";
 import Screen from "./screen";
+import DoneCv from "../components/doneCv";
 
 let offset = 0;
 
 export default function Basicdetail() {
   let flatListRef = useRef(null);
-  const { firstCv, setFirstCv } = useContext(cvsContext);
 
   const [stepList, setStepList] = useState([
     { id: 0, title: "About", icon: "person", selected: true },
@@ -35,14 +34,13 @@ export default function Basicdetail() {
     { id: 6, title: "Done", icon: "done-all", selected: false },
   ]);
 
-
   const handleNext = () => {
     let lArr = [...stepList];
     let selectedItem = lArr.filter((step) => step.selected === true);
     let lastId = selectedItem[0].id;
     let newId = parseInt(lastId) + 1;
 
-    if (newId < 6) {
+    if (newId < 7) {
       lArr.forEach((st) => {
         if (st.id === lastId) {
           st.selected = false;
@@ -61,19 +59,16 @@ export default function Basicdetail() {
         }
       });
     }
-    console.log("off1" , offset)
+    console.log("off1", offset);
 
     setStepList(lArr);
-    if(lastId === 5){
-      offset = 0 ;
-    }else{
+    if (lastId === 6) {
+      offset = 0;
+    } else {
       offset = parseInt(offset) + 45;
-
     }
     flatListRef.current.scrollToOffset({ offset: offset });
-    console.log("off" , offset)
-
-
+    console.log("off", offset);
   };
   return (
     <Screen>
@@ -103,30 +98,34 @@ export default function Basicdetail() {
             //   return <ContactFields key={step.id}/>
 
             // }
-            switch(step.id){
-                case 0:
-                    return <AboutFields key={step.id} />;
-                    break;
-                case 1 : 
-                    return <ContactFields key={step.id}/>
+            switch (step.id) {
+              case 0:
+                return <AboutFields key={step.id} onPressNext={handleNext} />;
                 break;
-                case 2 :
-                  return <WorkFields key={step.id}/>;
-                  break;
-                  case 3 :
-                    return <EducationFields key={step.id}/>;
-                    break;
-                    case 4 :
-                      return <SkillsFields key={step.id}/>;
-                      break;
-                      case 5 :
-                        return <SummaryFields key={step.id}/>;
-                        break;
-
-            } 
+              case 1:
+                return <ContactFields key={step.id} onPressNext={handleNext} />;
+                break;
+              case 2:
+                return <WorkFields key={step.id} onPressNext={handleNext} />;
+                break;
+              case 3:
+                return (
+                  <EducationFields key={step.id} onPressNext={handleNext} />
+                );
+                break;
+              case 4:
+                return <SkillsFields key={step.id} onPressNext={handleNext} />;
+                break;
+              case 5:
+                return <SummaryFields key={step.id} onPressNext={handleNext} />;
+                break;
+              case 6:
+                return <DoneCv key={step.id} onPressNext={handleNext} />;
+                break;
+            }
           }
         })}
-        <TouchableHighlight
+        {/* <TouchableHighlight
           underlayColor="#fff"
           style={styles.touchablebutton}
           onPress={handleNext}
@@ -134,7 +133,7 @@ export default function Basicdetail() {
           <View style={styles.mainbtn}>
             <Text style={styles.btntext}>NEXT</Text>
           </View>
-        </TouchableHighlight>
+        </TouchableHighlight> */}
       </View>
     </Screen>
   );
@@ -146,14 +145,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     alignItems: "center",
     justifyContent: "center",
-    marginVertical : 20
+    marginVertical: 20,
   },
   stepsContainer: {
     display: "flex",
     flex: 2,
   },
   addDetailContainer: {
-    paddingHorizontal : 25,
+    paddingHorizontal: 25,
     display: "flex",
     flex: 8,
     justifyContent: "space-between",

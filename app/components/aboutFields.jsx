@@ -1,10 +1,9 @@
 import React, { useContext, useState } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, TouchableHighlight } from "react-native";
 import { cvs, cvsContext } from "../context/cvsContext";
 import AppTextInput from "./inputs/appTextInput";
 
-export default function AboutFields() {
-
+export default function AboutFields({ onPressNext }) {
   // const { firstCv, setFirstCv } = useContext(cvsContext);
   // const [fName, setFname] = useState("");
   // const [lName, setLname] = useState("");
@@ -19,6 +18,15 @@ export default function AboutFields() {
       <AppTextInput label="LAST NAME" name="lName" />
       <AppTextInput label="DATE OF BIRTH" name="dateOfBirth" />
       <AppTextInput label="JOB TITLE" name="jobTitle" />
+      <TouchableHighlight
+        underlayColor="#fff"
+        style={styles.touchablebutton}
+        onPress={onPressNext}
+      >
+        <View style={styles.mainbtn}>
+          <Text style={styles.btntext}>NEXT</Text>
+        </View>
+      </TouchableHighlight>
     </View>
   );
 }
@@ -37,5 +45,23 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     marginBottom: 40,
     fontSize: 16,
+  },
+  mainbtn: {
+    borderRadius: 30,
+    width: "100%",
+    backgroundColor: "dodgerblue",
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 10,
+    shadowColor: "#52006A",
+    elevation: 10,
+  },
+  btntext: {
+    color: "white",
+    fontSize: 24,
+  },
+  touchablebutton: {
+    overlayColor: "#fff",
   },
 });

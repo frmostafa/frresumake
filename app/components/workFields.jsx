@@ -13,51 +13,71 @@ import AppTextInput from "./inputs/appTextInput";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { cvsContext } from "../context/cvsContext";
 import DataListItem from "./dataListItem";
-import AddDataModal from "./modals/addDataModal"
+import AddDataModal from "./modals/addDataModal";
 
 const modalFields = [
-{id : 1 , Type : "textInput" , name : "primary" , value : "" , label : "JOB TITLE"},
-{id : 2 , Type : "textInput" , name : "secondary" , value : "" , label : "EMPLOYER"},
-{id : 3 , Type : "textInput" , name : "city" , value : "" , label : "CITY"},
-{id : 4 , Type : "textInput" , name : "country" , value : "" , label : "COUNTRY"},
-{id : 5 , Type : "textInput" , name : "startDate" , value : "" , label : "START DATE"},
-{id : 6 , Type : "textInput" , name : "endDate" , value : "" , label : "End Date"}
-]
-export default function WorkFields() {
-  const { firstCv, setFirstCv } = useContext(cvsContext);
+  { id: 1, Type: "textInput", name: "primary", value: "", label: "JOB TITLE" },
+  { id: 2, Type: "textInput", name: "secondary", value: "", label: "EMPLOYER" },
+  { id: 3, Type: "textInput", name: "city", value: "", label: "CITY" },
+  { id: 4, Type: "textInput", name: "country", value: "", label: "COUNTRY" },
+  {
+    id: 5,
+    Type: "textInput",
+    name: "startDate",
+    value: "",
+    label: "START DATE",
+  },
+  { id: 6, Type: "textInput", name: "endDate", value: "", label: "End Date" },
+];
+export default function WorkFields({ onPressNext }) {
+  const [cvContext] = useContext(cvsContext);
   const [modalVisible, setModalVisible] = useState(false);
- 
+
   const toggleModalVisiblity = () => {
     setModalVisible(!modalVisible);
-  }
-  useEffect(()=>{console.log("chi shod" , firstCv.data['work'])},[])
+  };
+  useEffect(() => {
+    console.log("chi shod", cvContext.data["work"]);
+  }, []);
   return (
     <>
-    <View style={styles.detail}>
-      <Text style={styles.primaryText}>your work experience</Text>
-      <Text style={styles.secondaryText}>
-        we recommend to add the most recent 2 companies that you have work for
-      </Text>
-      {firstCv.data['work'].map((item) =>(
+      <View style={styles.detail}>
+        <Text style={styles.primaryText}>your work experience</Text>
+        <Text style={styles.secondaryText}>
+          we recommend to add the most recent 2 companies that you have work for
+        </Text>
+        {cvContext.data["work"].map((item) => (
           <DataListItem key={item.id} data={item} />
         ))}
- 
-      <TouchableOpacity onPress={()=>setModalVisible(true)}>
-        <View style={styles.addNewBtn}>
-          <MaterialCommunityIcons
-            style={styles.addBtnText}
-            name="plus-circle-outline"
-            color="black"
-          />
-          <Text style={styles.addBtnText}>add new work</Text>
+
+        <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <View style={styles.addNewBtn}>
+            <MaterialCommunityIcons
+              style={styles.addBtnText}
+              name="plus-circle-outline"
+              color="black"
+            />
+            <Text style={styles.addBtnText}>add new work</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+      <TouchableHighlight
+        underlayColor="#fff"
+        style={styles.touchablebutton}
+        onPress={onPressNext}
+      >
+        <View style={styles.mainbtn}>
+          <Text style={styles.btntext}>NEXT</Text>
         </View>
-      </TouchableOpacity>
-      
-    </View>
-        <Modal visible={modalVisible} animationType={"slide"}>
-          <Button title="close" onPress={()=> setModalVisible(false)}></Button>
-          <AddDataModal type="work" toggleVisibility={toggleModalVisiblity} fields={modalFields}/>
-        </Modal>
+      </TouchableHighlight>
+      <Modal visible={modalVisible} animationType={"slide"}>
+        <Button title="close" onPress={() => setModalVisible(false)}></Button>
+        <AddDataModal
+          type="work"
+          toggleVisibility={toggleModalVisiblity}
+          fields={modalFields}
+        />
+      </Modal>
     </>
   );
 }
@@ -81,11 +101,29 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop : 30
+    marginTop: 30,
   },
   addBtnText: {
     fontSize: 22,
     color: "dodgerblue",
     marginHorizontal: 1,
+  },
+  mainbtn: {
+    borderRadius: 30,
+    width: "100%",
+    backgroundColor: "dodgerblue",
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 10,
+    shadowColor: "#52006A",
+    elevation: 10,
+  },
+  btntext: {
+    color: "white",
+    fontSize: 24,
+  },
+  touchablebutton: {
+    overlayColor: "#fff",
   },
 });

@@ -5,90 +5,89 @@ import { cvsContext } from "../context/cvsContext";
 import Screen from "./screen";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 
-
 export default function ShowCv() {
-  // const cvs = useContext(cvsContext);
-  const { firstCv, setFirstCv } = useContext(cvsContext);
-  const [data, setData] = useState(firstCv["data"]);
+  const [cvContext] = useContext(cvsContext);
+  const [mainRoot] = useState(cvContext);
+  const [data] = useState(cvContext["data"]);
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    console.log("data" ,Object.keys(firstCv["data"]))
+    console.log("data", cvContext);
   }, [isFocused]);
 
   return (
     <Screen>
       <View style={styles.showCvContainer}>
         <Text style={styles.cvName}>
-          {firstCv.name} {firstCv.lName}
+          {mainRoot.name} {mainRoot.lName}
         </Text>
-        <Text style={styles.cvJobTitle}>{firstCv.jobTitle}</Text>
+        <Text style={styles.cvJobTitle}>{mainRoot.jobTitle}</Text>
         <View style={styles.cvdetailcontainer}>
           <View style={styles.cvdetailItem}>
-            {firstCv.email !== "" && (
+            {mainRoot.email !== "" && (
               <MaterialCommunityIcons name="email" size={14} color="black" />
             )}
-            <Text style={styles.cvdetailText}>{firstCv.email}</Text>
+            <Text style={styles.cvdetailText}>{mainRoot.email}</Text>
           </View>
           <View style={styles.cvdetailItem}>
-            {firstCv.number !== "" && (
+            {mainRoot.number !== "" && (
               <MaterialCommunityIcons name="phone" size={14} color="black" />
             )}
-            <Text style={styles.cvdetailText}>{firstCv.number}</Text>
+            <Text style={styles.cvdetailText}>{mainRoot.number}</Text>
           </View>
         </View>
         <View style={styles.cvdetailcontainer}>
           <View style={styles.cvdetailItem}>
-            {firstCv.address !== "" && (
+            {mainRoot.address !== "" && (
               <MaterialCommunityIcons
                 name="map-marker"
                 size={14}
                 color="black"
               />
             )}
-            <Text style={styles.cvdetailText}>{firstCv.address}</Text>
+            <Text style={styles.cvdetailText}>{mainRoot.address}</Text>
           </View>
           <View style={styles.cvdetailItem}>
-            {firstCv.dateOfBirth !== "" && (
+            {mainRoot.dateOfBirth !== "" && (
               <MaterialCommunityIcons
                 name="calendar-month-outline"
                 size={14}
                 color="black"
               />
             )}
-            <Text style={styles.cvdetailText}>{firstCv.dateOfBirth}</Text>
+            <Text style={styles.cvdetailText}>{mainRoot.dateOfBirth}</Text>
           </View>
         </View>
 
-       
+        {Object.keys(data).map((item, i) => (
+          <View key={i} style={styles.cvAddDataContainer}>
+            <Text style={styles.cvAddDataTitleText}>{item}</Text>
 
-        { Object.keys(data).map((item, i) => (
-              <View key={i} style={styles.cvAddDataContainer}>
-              <Text style={styles.cvAddDataTitleText}>{item}</Text>
-    
-              <View style={styles.addDataWrapper}>
-                {data[item].map((data, i)=>(
-                
+            <View style={styles.addDataWrapper}>
+              {data[item].map((data, i) => (
                 <View key={i} style={styles.addDataMainLine}>
                   <View style={styles.addDaaMainLineText}>
                     <Text style={styles.addDataTextPrimary}>
                       {data.primary}
                     </Text>
-                    <Text style={styles.addDataTextSecondary}>{data.secondary}</Text>
+                    <Text style={styles.addDataTextSecondary}>
+                      {data.secondary}
+                    </Text>
                   </View>
                   <View style={styles.addDaaMainLineText}>
-                    <Text style={styles.addDataTextSecondary}>{data.startDate}</Text>
+                    <Text style={styles.addDataTextSecondary}>
+                      {data.startDate}
+                    </Text>
                     <Text style={styles.addDataTextSecondary}>-</Text>
-                    <Text style={styles.addDataTextSecondary}>{data.endDate}</Text>
+                    <Text style={styles.addDataTextSecondary}>
+                      {data.endDate}
+                    </Text>
                   </View>
                 </View>
-                ))}
-
-              </View>
+              ))}
             </View>
+          </View>
         ))}
-
-     
       </View>
     </Screen>
   );

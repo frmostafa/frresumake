@@ -2,63 +2,55 @@ import React, { useContext, useEffect, useState } from "react";
 import { Text, StyleSheet, View, TextInput, Button } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { cvsContext } from "../../context/cvsContext";
-import uuid from 'react-native-uuid';
+import uuid from "react-native-uuid";
 
-
-export default function AddWorkModal({fields, toggleVisibility, type}) {
-  const [filedsOption , setFieldsOption] = useState(fields);
-  const { firstCv, setFirstCv } = useContext(cvsContext);
+export default function AddWorkModal({ fields, toggleVisibility, type }) {
+  const [filedsOption, setFieldsOption] = useState(fields);
+  const [cvContext, setCvContext] = useContext(cvsContext);
 
   const onInputChange = (optionId, e) => {
-    let lObj = [...filedsOption] ;
-    let option = lObj.find(obj => obj.id === optionId);
+    let lObj = [...filedsOption];
+    let option = lObj.find((obj) => obj.id === optionId);
     option.value = e;
     setFieldsOption(lObj);
-  }
+  };
 
   const handleAddData = () => {
     let newObj = {};
-    filedsOption.forEach(element => {
-      if(element.value != ""){
+    filedsOption.forEach((element) => {
+      if (element.value != "") {
         newObj[element.name] = element.value;
-      }else{
+      } else {
         newObj[element.name] = "";
       }
     });
     newObj["id"] = uuid.v4();
-    let lObj = firstCv;
+    let lObj = cvContext;
     let directArr = lObj.data[type];
     let newArr = directArr.push(newObj);
-    setFirstCv(lObj);
+    setCvContext(lObj);
     // console.log("what is data",newObj)
     toggleVisibility();
-  }
+  };
 
-  useEffect(()=>{setFieldsOption(fields)},[]);
+  useEffect(() => {
+    setFieldsOption(fields);
+  }, []);
   return (
     <View style={styles.detail}>
-      {filedsOption.flatMap((field) =>(
+      {filedsOption.flatMap((field) => (
         <View style={styles.textInputContainer} key={field.id}>
-        <TextInput placeholder={field.label}
-         onChangeText={(newText) => {
-          onInputChange(field.id,newText)
-        }}
-        value={field["value"]}
-        style={styles.textInput} />
-      </View>
+          <TextInput
+            placeholder={field.label}
+            onChangeText={(newText) => {
+              onInputChange(field.id, newText);
+            }}
+            value={field["value"]}
+            style={styles.textInput}
+          />
+        </View>
       ))}
-      <Button title="DONE" onPress={()=> handleAddData()}/>
-
-
-{/*       
-          // onChangeText={(newText) => {
-          //   setInputValue(newText);
-          //   firstCv[name] = newText;
-          //   setFirstCv(firstCv);
-          // }}
-          // value={firstCv[name] ? firstCv[name] : inputValue} */}
-         
-  
+      <Button title="DONE" onPress={() => handleAddData()} />
     </View>
   );
 }
