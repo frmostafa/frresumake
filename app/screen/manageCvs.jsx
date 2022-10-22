@@ -3,6 +3,8 @@ import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import Screen from "./screen";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialIcons } from '@expo/vector-icons'; 
+
 
 export default function ManageCvs() {
   return (
@@ -19,7 +21,30 @@ export default function ManageCvs() {
           <View style={styles.mcWrapper}>
             <Text style={styles.nameText}>Mostafa Faryabi</Text>
             <Text style={styles.jobTitleText}>Frontend Developer</Text>
+            <View style={styles.averageResumeContainer}>
+                <View style={styles.averageResumeItem}>
+                <MaterialIcons  name="chrome-reader-mode" size={36} color="black" />
+                <View style={styles.horiItemSpacer}></View>
 
+<Text style={styles.kholaseCountText}>2</Text>
+                </View>
+                <View style={styles.itemSpacer}></View>
+                <View style={styles.averageResumeItem}>
+                <MaterialIcons  name="architecture" size={36} color="black" />
+                <View style={styles.horiItemSpacer}></View>
+                <Text style={styles.kholaseCountText}>4</Text>
+
+                </View>
+                <View style={styles.itemSpacer}></View>
+
+                <View style={styles.averageResumeItem}>
+                <MaterialIcons  name="shopping-bag" size={36} color="black" />
+                <View style={styles.horiItemSpacer}></View>
+                <Text style={styles.kholaseCountText}>0</Text>
+
+
+                </View>
+            </View>
           </View>
         </LinearGradient>
 
@@ -88,4 +113,32 @@ const styles = StyleSheet.create({
     color: "dodgerblue",
     marginHorizontal: 1,
   },
+  averageResumeContainer : {
+    flexDirection : "row",
+    marginTop : 10
+  },
+  averageResumeItem : {
+    alignItems : "center",
+    justifyContent : "center",
+    width : 60,
+    height : 60,
+    marginHorizontal: 15,
+    
+
+  },
+  itemSpacer : {
+    height : 70,
+    backgroundColor : "white",
+    width : 1
+  },
+  horiItemSpacer : {
+    height : 1,
+    backgroundColor : "white",
+    width : 40,
+    marginTop : 5
+  },
+  kholaseCountText : {
+    fontSize : 26,
+    fontWeight : "300"
+  }
 });
