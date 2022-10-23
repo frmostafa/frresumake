@@ -12,7 +12,7 @@ import ManageCvInStorageItem from "../components/items/manageCvInStorageItem";
 
 
 export default function ManageCvs() {
-  const [cvContext] = useContext(cvsContext);
+  const [cvContext, setCvContext] = useContext(cvsContext);
   const [allCv, setAllCv] = useState([]);
   const isFocused = useIsFocused();
 
@@ -42,10 +42,12 @@ export default function ManageCvs() {
     }
   };
 
-  const handleChangeActiveItem = (idToActivate)=> {
+  const handleChangeActiveItem = (itemToActivate)=> {
+    setCvContext(itemToActivate)
     let lArr = [...allCv];
+    let itemId = itemToActivate["id"];
     lArr.forEach(element => {
-      if(element.id === idToActivate){
+      if(element.id === itemId){
         element.activeCv = true
         console.log("item to active " , element);
       }else{
@@ -53,6 +55,15 @@ export default function ManageCvs() {
       }
       storeData(lArr);
     });
+  }
+
+  const handleDeleteCVFromLocalStorage = (itemIdToDelete) => { 
+    let lArr = [...allCv];
+    let newArr = lArr.filter((item) => item.id !== itemIdToDelete);
+    if(newArr.length === 2) {
+      console.log("in akharin bare")
+    }
+    // storeData(newArr);
   }
 
   useEffect(() => {
@@ -78,7 +89,7 @@ export default function ManageCvs() {
         data={allCv}
         keyExtractor={(key) => key.id.toString()}
         renderItem={({ item }) => (
-          <ManageCvInStorageItem savedData={item} onActiveItemChange={handleChangeActiveItem}/>
+          <ManageCvInStorageItem savedData={item} onActiveItemChange={handleChangeActiveItem} onDelteCv={handleDeleteCVFromLocalStorage} />
         )}
         ></FlatList>
       </View>

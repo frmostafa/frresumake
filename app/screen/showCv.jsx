@@ -19,21 +19,21 @@ export default function ShowCv() {
     <Screen>
       <View style={styles.showCvContainer}>
         <Text style={styles.cvName}>
-          {mainRoot.name} {mainRoot.lName}
+          {cvContext.name} {cvContext.lName}
         </Text>
-        <Text style={styles.cvJobTitle}>{mainRoot.jobTitle}</Text>
+        <Text style={styles.cvJobTitle}>{cvContext.jobTitle}</Text>
         <View style={styles.cvdetailcontainer}>
           <View style={styles.cvdetailItem}>
-            {mainRoot.email !== "" && (
+            {cvContext.email !== "" && (
               <MaterialCommunityIcons name="email" size={14} color="black" />
             )}
-            <Text style={styles.cvdetailText}>{mainRoot.email}</Text>
+            <Text style={styles.cvdetailText}>{cvContext.email}</Text>
           </View>
           <View style={styles.cvdetailItem}>
-            {mainRoot.number !== "" && (
+            {cvContext.number !== "" && (
               <MaterialCommunityIcons name="phone" size={14} color="black" />
             )}
-            <Text style={styles.cvdetailText}>{mainRoot.number}</Text>
+            <Text style={styles.cvdetailText}>{cvContext.number}</Text>
           </View>
         </View>
         <View style={styles.cvdetailcontainer}>

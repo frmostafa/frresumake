@@ -8,6 +8,7 @@ import { useIsFocused } from "@react-navigation/native";
 export default function ManageCvInStorageItem({
   savedData,
   onActiveItemChange,
+  onDelteCv
 }) {
   const isFocused = useIsFocused();
   const [data, setDate] = useState(savedData);
@@ -29,7 +30,7 @@ export default function ManageCvInStorageItem({
         <View style={styles.itemActionWrapper}>
           {!savedData.activeCv && (
             <TouchableOpacity
-              onPress={() => onActiveItemChange(savedData["id"])}
+              onPress={() => onActiveItemChange(savedData)}
             >
               <View style={styles.ItemBadgeOrange}>
                 <Text>ACTIVATE</Text>
@@ -42,7 +43,7 @@ export default function ManageCvInStorageItem({
             </View>
           )}
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=> onDelteCv(savedData["id"])}>
             <MaterialIcons name="delete-outline" size={24} color="black" />
           </TouchableOpacity>
         </View>
