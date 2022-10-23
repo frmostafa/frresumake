@@ -1,6 +1,9 @@
 import { createContext } from "react";
 
 export const currentcv = {
+  id : "",
+  activeCv:false,
+  isSaved : false,
   cvName: "",
   name: "Zahra Rezapour",
   lName: "",
@@ -13,7 +16,7 @@ export const currentcv = {
   data: {
     education: [
       {
-        id: 2,
+        id: 0,
         primary: "diplom riazi",
         secondary: "rajaie",
         city: "kerman",

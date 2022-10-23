@@ -1,16 +1,21 @@
-import React, { useContext, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useContext, useEffect, useState } from "react";
 import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
 import { cvsContext } from "../context/cvsContext";
 import AppTextInput from "./inputs/appTextInput";
+import uuid from "react-native-uuid";
+
 
 export default function DoneCv({ onPressNext }) {
-  const [cvContext] = useContext(cvsContext);
+  const [cvContext, setCvContext] = useContext(cvsContext);
   const [allCv, setAllCv] = useState([]);
+  const [saved, setSaved] = useState(cvContext['isSaved'])
 
   const storeData = async (value) => {
     try {
       const jsonValue = JSON.stringify(value);
-      await AsyncStorage.setItem("cvs", jsonValue);
+      await AsyncStorage.setItem("cev", jsonValue);
+
     } catch (e) {
       // saving error
     }
@@ -18,17 +23,36 @@ export default function DoneCv({ onPressNext }) {
 
   const getData = async () => {
     try {
-      const jsonValue = await AsyncStorage.getItem("cvs");
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
+      const jsonValue = await AsyncStorage.getItem("cev");
+      console.log("data async1",  jsonValue);
+
+      let data = jsonValue != null ? JSON.parse(jsonValue) : [];
+      console.log("data async",  data);
+
+      setAllCv(data);
+
+      return data;
     } catch (e) {
       // error reading value
+      console.log("what is err",e)
     }
   };
+  useEffect(()=>{
+    // const data = getData();
+    // setAllCv(data);
+    getData();
+  },[])
 
   const handleSaveCv = () => {
-    // let cvData = cvContext;
-    // cvData.cvName = cvName;
-    console.log("chi save konam", cvContext);
+    let cvData = cvContext;
+    cvData["isSaved"] = true;
+    cvData["id"] = uuid.v4();;
+    setCvContext(cvData)
+    let lArr = allCv;
+    lArr.push(cvData);
+    storeData(lArr);
+    getData()
+    console.log("chi save konam",  lArr);
   };
   return (
     <View style={styles.detail}>
@@ -40,10 +64,10 @@ export default function DoneCv({ onPressNext }) {
       <TouchableOpacity
         underlayColor="#fff"
         style={styles.touchablebutton}
-        onPress={() => handleSaveCv()}
+        onPress={()=>handleSaveCv()}
       >
         <View style={styles.mainbtn}>
-          <Text style={styles.btntext}>SAVE AND SHOW</Text>
+          <Text style={styles.btntext}>{ saved ? "ALREADY SAVED" : "SAVE AND SHOW"}</Text>
         </View>
       </TouchableOpacity>
       <TouchableOpacity

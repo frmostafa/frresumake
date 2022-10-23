@@ -1,23 +1,55 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useIsFocused } from "@react-navigation/native";
 
-export default function ManageResumeListItem({contextData}) {
+export default function ManageCvInStorageItem({
+  savedData,
+  onActiveItemChange,
+}) {
+  const isFocused = useIsFocused();
+  const [data, setDate] = useState(savedData);
+
+  useEffect(() => {
+    console.log("data in items", savedData["id"]);
+  }, [isFocused]);
   return (
     <LinearGradient
       // Background Linear Gradient
-      colors={["dodgerblue", "#FCBEF9"]}
+      colors={["#EAE174", "#1AF2F1"]}
       style={styles.cvContainer}
     >
-      <Image
-        style={styles.profileImgStyle}
-        source={require("../../assets/image/user.png")}
-      ></Image>
+      {/* <Image
+      style={styles.profileImgStyle}
+      source={require("../../assets/image/user.png")}
+    ></Image> */}
       <View style={styles.mcWrapper}>
-        <Text style={styles.nameText}>{contextData.name} {contextData.lName}</Text>
-        <Text style={styles.jobTitleText}>{contextData.jobTitle}</Text>
+        <View style={styles.itemActionWrapper}>
+          {!savedData.activeCv && (
+            <TouchableOpacity
+              onPress={() => onActiveItemChange(savedData["id"])}
+            >
+              <View style={styles.ItemBadgeOrange}>
+                <Text>ACTIVATE</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+          {savedData.activeCv && (
+            <View style={styles.ItemBadgeGreen}>
+              <Text>ACTIVE</Text>
+            </View>
+          )}
+
+          <TouchableOpacity>
+            <MaterialIcons name="delete-outline" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.nameText}>
+          {savedData.name} {savedData.lName}
+        </Text>
+        <Text style={styles.jobTitleText}>{savedData.jobTitle}</Text>
         <View style={styles.averageResumeContainer}>
           <View style={styles.averageResumeItem}>
             <MaterialIcons name="chrome-reader-mode" size={36} color="black" />
@@ -45,6 +77,23 @@ export default function ManageResumeListItem({contextData}) {
 }
 
 const styles = StyleSheet.create({
+  ItemBadgeGreen: {
+    backgroundColor: "#2ffc55",
+    padding: 7,
+    borderRadius: 10,
+  },
+  ItemBadgeOrange: {
+    backgroundColor: "#ff9900",
+    padding: 7,
+    borderRadius: 10,
+  },
+  itemActionWrapper: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    marginVertical: 10,
+  },
   jobTitleText: {
     fontSize: 16,
     fontWeight: "300",
@@ -88,16 +137,15 @@ const styles = StyleSheet.create({
   },
 
   cvContainer: {
-    height: 200,
     width: "100%",
     borderRadius: 25,
-    marginTop: 60,
+    marginTop: 30,
     alignItems: "center",
   },
   mcWrapper: {
     width: "100%",
     flexDirection: "column",
-    marginTop: 60,
+    padding: 10,
     alignItems: "center",
   },
 });
