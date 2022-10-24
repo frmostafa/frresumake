@@ -1,8 +1,26 @@
 import { createContext } from "react";
 
+export const clearCv =  {
+  id : "",
+  isSaved : false,
+  cvName: "",
+  name: "",
+  lName: "",
+  dateOfBirth: "",
+  jobTitle: "",
+  email: "",
+  number: "",
+  website: "",
+  address: "",
+  data: {
+    education: [],
+    skill: [],
+    work: [],
+  },
+};
+
 export const currentcv = {
   id : "",
-  activeCv:false,
   isSaved : false,
   cvName: "",
   name: "Zahra Rezapour",

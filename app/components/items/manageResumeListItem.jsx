@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-
+import { Feather } from '@expo/vector-icons';
 export default function ManageResumeListItem({contextData}) {
   return (
     <LinearGradient
@@ -20,23 +20,21 @@ export default function ManageResumeListItem({contextData}) {
         <Text style={styles.jobTitleText}>{contextData.jobTitle}</Text>
         <View style={styles.averageResumeContainer}>
           <View style={styles.averageResumeItem}>
-            <MaterialIcons name="chrome-reader-mode" size={36} color="black" />
-            <View style={styles.horiItemSpacer}></View>
+            <Feather name="edit" size={32} color="black" />
+            {/* <View style={styles.horiItemSpacer}></View>
 
-            <Text style={styles.kholaseCountText}>2</Text>
+            <Text style={styles.kholaseCountText}>EDIT</Text> */}
           </View>
           <View style={styles.itemSpacer}></View>
           <View style={styles.averageResumeItem}>
-            <MaterialIcons name="architecture" size={36} color="black" />
-            <View style={styles.horiItemSpacer}></View>
-            <Text style={styles.kholaseCountText}>4</Text>
+          <Feather name="download" size={32} color="black" />
+            {/* <Text style={styles.kholaseCountText}>DOWNLOAD</Text> */}
           </View>
           <View style={styles.itemSpacer}></View>
 
           <View style={styles.averageResumeItem}>
-            <MaterialIcons name="shopping-bag" size={36} color="black" />
-            <View style={styles.horiItemSpacer}></View>
-            <Text style={styles.kholaseCountText}>0</Text>
+          <MaterialCommunityIcons name="share-variant-outline" size={32} color="black" />
+                   
           </View>
         </View>
       </View>
@@ -67,13 +65,13 @@ const styles = StyleSheet.create({
   averageResumeItem: {
     alignItems: "center",
     justifyContent: "center",
-    width: 60,
-    height: 60,
+    width: 80,
+    height: 70,
     marginHorizontal: 15,
   },
   itemSpacer: {
     height: 70,
-    backgroundColor: "white",
+    backgroundColor: "black",
     width: 1,
   },
   horiItemSpacer: {
@@ -83,14 +81,13 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   kholaseCountText: {
-    fontSize: 26,
+    fontSize: 20,
     fontWeight: "300",
   },
 
   cvContainer: {
     height: 200,
     width: "100%",
-    borderRadius: 25,
     marginTop: 60,
     alignItems: "center",
   },

@@ -1,17 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Text, View, StyleSheet, TouchableOpacity, Image, FlatList } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Image, FlatList, ScrollView } from "react-native";
 import Screen from "./screen";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import ManageResumeListItem from "../components/items/manageResumeListItem";
-import { cvsContext } from "../context/cvsContext";
+import { clearCv, cvsContext } from "../context/cvsContext";
 import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ManageCvInStorageItem from "../components/items/manageCvInStorageItem";
+import { navigation } from "@react-navigation/native";
+import Basicdetail from "./basicdetail";
 
 
-export default function ManageCvs() {
+export default function ManageCvs({navigation}) {
   const [cvContext, setCvContext] = useContext(cvsContext);
   const [allCv, setAllCv] = useState([]);
   const isFocused = useIsFocused();
@@ -49,32 +51,57 @@ export default function ManageCvs() {
     lArr.forEach(element => {
       if(element.id === itemId){
         element.activeCv = true
-        console.log("item to active " , element);
       }else{
         element.activeCv = false;
       }
+    });
+    const sortedArray = lArr.sort((a, b) => (a.activeCv) ? -1 : 1)
+
+    storeData(sortedArray);
+
+  }
+
+  const handleDeactiveAllItem = () => {
+    let lArr = [...allCv];
+    lArr.forEach(element => {
+      element.activeCv = false;
       storeData(lArr);
     });
   }
 
-  const handleDeleteCVFromLocalStorage = (itemIdToDelete) => { 
+  const handleDeleteCVFromLocalStorage = (itemToDelete) => { 
     let lArr = [...allCv];
-    let newArr = lArr.filter((item) => item.id !== itemIdToDelete);
-    if(newArr.length === 2) {
-      console.log("in akharin bare")
-    }
-    // storeData(newArr);
+    let itemId = itemToDelete["id"];
+    let itemToDel = lArr.filter((item) => item.id === itemId);
+    let isActive = itemToDel[0].activeCv ? true : false;
+    let newArr = lArr.filter((item) => item.id !== itemId);
+    console.log("item to del", isActive)
+    if(newArr.length === 1) {
+      let lastItem = newArr[0];
+      handleChangeActiveItem(lastItem);
+    }else if(isActive){
+      let anotherItem = newArr[0];
+      handleChangeActiveItem(anotherItem);
+    }    
+    storeData(newArr);
+  } 
+
+  const handleAddNewResume = () => {
+    setCvContext(clearCv);
+    handleDeactiveAllItem()
+    navigation.navigate('make', { screen: 'Basicdetail' });
   }
 
   useEffect(() => {
     getData()
   }, [isFocused]);
+
+
   return (
     <Screen>
-      <View style={styles.mcContainer}>
-        <Text style={styles.headerText}>Manage your cv's</Text>
+      <ScrollView >
         <ManageResumeListItem contextData={cvContext}/>
-        <TouchableOpacity onPress={() => console.log("add cv")}>
+        <TouchableOpacity onPress={() => handleAddNewResume()}>
           <View style={styles.addNewBtn}>
             <MaterialCommunityIcons
               style={styles.addBtnText}
@@ -84,38 +111,39 @@ export default function ManageCvs() {
             <Text style={styles.addBtnText}>add new Resume</Text>
           </View>
         </TouchableOpacity>
-        <FlatList
+        <View  style={styles.storageCvsFlatList}>
+        {allCv.map((item)=>(
+
+          <ManageCvInStorageItem key={item.id} savedData={item} onActiveItemChange={handleChangeActiveItem} onDelteCv={handleDeleteCVFromLocalStorage} />
+
+        ))}
+        </View>
+        {/* <FlatList
         style={styles.storageCvsFlatList}
         data={allCv}
         keyExtractor={(key) => key.id.toString()}
         renderItem={({ item }) => (
           <ManageCvInStorageItem savedData={item} onActiveItemChange={handleChangeActiveItem} onDelteCv={handleDeleteCVFromLocalStorage} />
         )}
-        ></FlatList>
-      </View>
+        ></FlatList> */}
+      </ScrollView>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   storageCvsFlatList : {
+    paddingHorizontal : 12,
     width : "100%",
   },
   mcContainer: {
-    padding: 10,
     justifyContent: "center",
     alignItems: "center",
     paddingBottom : 170
   },
-  headerText: {
-    fontSize: 32,
-    marginVertical: 15,
-    fontWeight: "600",
-  },
   cvContainer: {
     height: 200,
     width: "100%",
-    borderRadius: 25,
     marginTop: 60,
     alignItems: "center",
   },

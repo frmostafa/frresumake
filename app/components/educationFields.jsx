@@ -42,7 +42,7 @@ export default function EducationFields({ onPressNext }) {
       <View style={styles.detail}>
         <Text style={styles.primaryText}>your education</Text>
         <Text style={styles.secondaryText}>
-          we recommend to add the most recent 2 companies that you have work for
+          we recommend to add the most recent 2 companies that you have educate in
         </Text>
         {cvContext.data["education"].map((item) => (
           <DataListItem key={item.id} data={item} />

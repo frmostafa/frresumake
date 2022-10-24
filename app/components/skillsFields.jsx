@@ -18,6 +18,7 @@ export default function SkillsFields({ onPressNext }) {
 
   return (
     <View style={styles.detail}>
+      <View >
       <Text style={styles.primaryText}>skills</Text>
       <Text style={styles.secondaryText}>
         we recommend to add the most recent 2 companies that you have work for
@@ -36,6 +37,7 @@ export default function SkillsFields({ onPressNext }) {
           <Text style={styles.addBtnText}>add new skill</Text>
         </View>
       </TouchableOpacity>
+      </View>
       <TouchableHighlight
         underlayColor="#fff"
         style={styles.touchablebutton}
@@ -52,6 +54,8 @@ export default function SkillsFields({ onPressNext }) {
 const styles = StyleSheet.create({
   detail: {
     display: "flex",
+    height : "100%",
+    justifyContent : "space-between"
   },
   primaryText: {
     fontSize: 24,

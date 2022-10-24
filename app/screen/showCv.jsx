@@ -68,7 +68,7 @@ export default function ShowCv() {
                 <View key={i} style={styles.addDataMainLine}>
                   <View style={styles.addDaaMainLineText}>
                     <Text style={styles.addDataTextPrimary}>
-                      {data.primary}
+                      {data.primary},
                     </Text>
                     <Text style={styles.addDataTextSecondary}>
                       {data.secondary}
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   },
   addDataTextSecondary: {
     fontSize: 12,
-    color: "#bcbcbc",
-    marginTop: 5,
+    color: "#6f6f6f",
+    marginTop: 3,
   },
 });

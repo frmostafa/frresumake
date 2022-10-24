@@ -43,7 +43,7 @@ export default function ManageCvInStorageItem({
             </View>
           )}
 
-          <TouchableOpacity onPress={()=> onDelteCv(savedData["id"])}>
+          <TouchableOpacity onPress={()=> onDelteCv(savedData)}>
             <MaterialIcons name="delete-outline" size={24} color="black" />
           </TouchableOpacity>
         </View>

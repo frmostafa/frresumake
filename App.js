@@ -6,14 +6,14 @@ import Basicdetail from "./app/screen/basicdetail";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ShowCv from "./app/screen/showCv";
-import { currentcv, cvsContext } from "./app/context/cvsContext";
+import { clearCv, currentcv, cvsContext } from "./app/context/cvsContext";
 import ManageCvs from "./app/screen/manageCvs";
 import { useState } from "react";
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
-  const [cvContext, setCvContext] = useState(currentcv);
+  const [cvContext, setCvContext] = useState(clearCv);
 
   return (
     <cvsContext.Provider value={[cvContext, setCvContext]}>

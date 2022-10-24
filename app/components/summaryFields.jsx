@@ -6,6 +6,7 @@ export default function SummaryFields({ onPressNext }) {
 
   return (
     <View style={styles.detail}>
+      <View>
       <Text style={styles.primaryText}>you're allmost done!</Text>
       <Text style={styles.secondaryText}>
         we recommend to add the most recent 2 companies that you have work for
@@ -15,6 +16,7 @@ export default function SummaryFields({ onPressNext }) {
         onChangeText={(newText) => setNumber(newText)}
         value={number}
       />
+      </View>
       <TouchableOpacity
         underlayColor="#fff"
         style={styles.touchablebutton}
@@ -31,6 +33,8 @@ export default function SummaryFields({ onPressNext }) {
 const styles = StyleSheet.create({
   detail: {
     display: "flex",
+    height : "100%",
+    justifyContent : "space-between"
   },
   primaryText: {
     fontSize: 24,
