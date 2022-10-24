@@ -1,59 +1,103 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Feather } from '@expo/vector-icons';
-export default function ManageResumeListItem({contextData}) {
+import { Feather } from "@expo/vector-icons";
+export default function ManageResumeListItem({ contextData, noActive }) {
+  const [noActiveItem, setNoActiveItem] = useState(noActive);
+  useEffect(() => {
+    setNoActiveItem(noActive);
+  }, [noActive]);
   return (
     <LinearGradient
       // Background Linear Gradient
       colors={["dodgerblue", "#FCBEF9"]}
       style={styles.cvContainer}
     >
-      <Image
-        style={styles.profileImgStyle}
-        source={require("../../assets/image/user.png")}
-      ></Image>
-      <View style={styles.mcWrapper}>
-        <Text style={styles.nameText}>{contextData.name} {contextData.lName}</Text>
-        <Text style={styles.jobTitleText}>{contextData.jobTitle}</Text>
-        <View style={styles.averageResumeContainer}>
-          <View style={styles.averageResumeItem}>
-            <Feather name="edit" size={32} color="black" />
-            {/* <View style={styles.horiItemSpacer}></View>
+      {/* {!noActiveItem && ( */}
+      {/* <View> */}
+      {!noActiveItem && (
+        <Image
+          style={styles.profileImgStyle}
+          source={require("../../assets/image/user.png")}
+        />
+      )}
+      {!noActiveItem && (
+        <View style={styles.mcWrapper}>
+          <View style={styles.itemActionWrapper}>
+            <View style={styles.ItemBadgeGreen}>
+              <Text>ACTIVE</Text>
+            </View>
 
-            <Text style={styles.kholaseCountText}>EDIT</Text> */}
+            <TouchableOpacity onPress={() => onDelteCv(savedData)}>
+              <MaterialIcons name="delete-outline" size={24} color="black" />
+            </TouchableOpacity>
           </View>
-          <View style={styles.itemSpacer}></View>
-          <View style={styles.averageResumeItem}>
-          <Feather name="download" size={32} color="black" />
-            {/* <Text style={styles.kholaseCountText}>DOWNLOAD</Text> */}
-          </View>
-          <View style={styles.itemSpacer}></View>
+          <Text style={styles.nameText}>
+            {contextData.name} {contextData.lName}
+          </Text>
+          <Text style={styles.jobTitleText}>{contextData.jobTitle}</Text>
+          <View style={styles.averageResumeContainer}>
+            <View style={styles.averageResumeItem}>
+              <Feather name="edit" size={32} color="black" />
+              {/* <View style={styles.horiItemSpacer}></View>
 
-          <View style={styles.averageResumeItem}>
-          <MaterialCommunityIcons name="share-variant-outline" size={32} color="black" />
-                   
+              <MaterialIcons
+                name="chrome-reader-mode"
+                size={36}
+                color="black"
+              /> */}
+            </View>
+            <View style={styles.itemSpacer}></View>
+            <View style={styles.averageResumeItem}>
+              <Feather name="download" size={32} color="black" />
+              {/* <View style={styles.horiItemSpacer}></View>
+
+              <MaterialIcons name="architecture" size={36} color="black" /> */}
+            </View>
+            <View style={styles.itemSpacer}></View>
+
+            <View style={styles.averageResumeItem}>
+              <MaterialCommunityIcons
+                name="share-variant-outline"
+                size={32}
+                color="black"
+              />
+              {/* <View style={styles.horiItemSpacer}></View>
+              <MaterialIcons name="shopping-bag" size={36} color="black" /> */}
+            </View>
           </View>
         </View>
-      </View>
+      )}
+      {/* </View> */}
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  ItemBadgeGreen: {
+    backgroundColor: "#2ffc55",
+    padding: 7,
+    borderRadius: 10,
+  },
+  itemActionWrapper: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+  },
   jobTitleText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "300",
   },
   nameText: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "500",
   },
   averageResumeContainer: {
     flexDirection: "row",
-    marginTop: 10,
+    marginVertical: 40,
   },
   profileImgStyle: {
     width: 100,
@@ -70,15 +114,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   itemSpacer: {
-    height: 70,
-    backgroundColor: "black",
+    height: 80,
+    backgroundColor: "white",
     width: 1,
   },
   horiItemSpacer: {
     height: 1,
     backgroundColor: "white",
-    width: 40,
-    marginTop: 5,
+    marginVertical: 20,
+    width: 55,
   },
   kholaseCountText: {
     fontSize: 20,
@@ -86,7 +130,7 @@ const styles = StyleSheet.create({
   },
 
   cvContainer: {
-    height: 200,
+    height: "auto",
     width: "100%",
     marginTop: 60,
     alignItems: "center",

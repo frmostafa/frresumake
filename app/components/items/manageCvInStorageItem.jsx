@@ -8,30 +8,22 @@ import { useIsFocused } from "@react-navigation/native";
 export default function ManageCvInStorageItem({
   savedData,
   onActiveItemChange,
-  onDelteCv
+  onDelteCv,
 }) {
   const isFocused = useIsFocused();
   const [data, setDate] = useState(savedData);
 
-  useEffect(() => {
-    console.log("data in items", savedData["id"]);
-  }, [isFocused]);
+  useEffect(() => {}, [isFocused]);
   return (
     <LinearGradient
       // Background Linear Gradient
       colors={["#EAE174", "#1AF2F1"]}
       style={styles.cvContainer}
     >
-      {/* <Image
-      style={styles.profileImgStyle}
-      source={require("../../assets/image/user.png")}
-    ></Image> */}
       <View style={styles.mcWrapper}>
         <View style={styles.itemActionWrapper}>
           {!savedData.activeCv && (
-            <TouchableOpacity
-              onPress={() => onActiveItemChange(savedData)}
-            >
+            <TouchableOpacity onPress={() => onActiveItemChange(savedData)}>
               <View style={styles.ItemBadgeOrange}>
                 <Text>ACTIVATE</Text>
               </View>
@@ -43,7 +35,7 @@ export default function ManageCvInStorageItem({
             </View>
           )}
 
-          <TouchableOpacity onPress={()=> onDelteCv(savedData)}>
+          <TouchableOpacity onPress={() => onDelteCv(savedData)}>
             <MaterialIcons name="delete-outline" size={24} color="black" />
           </TouchableOpacity>
         </View>

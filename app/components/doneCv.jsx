@@ -12,6 +12,7 @@ import AppTextInput from "./inputs/appTextInput";
 import uuid from "react-native-uuid";
 import { Ionicons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
+import ShowCv from "../screen/showCv";
 
 export default function DoneCv({ onPressNext }) {
   const [cvContext, setCvContext] = useContext(cvsContext);
@@ -63,7 +64,7 @@ export default function DoneCv({ onPressNext }) {
         element.activeCv = false;
       }
     });
-    const sortedArray = lArr.sort((a) => (a.activeCv) ? -1 : 1)
+    const sortedArray = lArr.sort((a) => (a.activeCv ? -1 : 1));
     storeData(sortedArray);
   };
   const handleSaveCv = () => {
@@ -77,13 +78,13 @@ export default function DoneCv({ onPressNext }) {
     handleChangeActiveItem(cvData);
     storeData(lArr);
     getData();
-    console.log("chi save konam", lArr);
+    // navigation.navigate("show", { screen: "ShowCv" });
   };
   const handleUpdateCv = () => {
     let toUpItemId = cvContext["id"];
     let dataArr = [...allCv];
-    let filtredArr = dataArr.filter(item => item.id !== toUpItemId);
-    let newArr = [...filtredArr , cvContext];
+    let filtredArr = dataArr.filter((item) => item.id !== toUpItemId);
+    let newArr = [...filtredArr, cvContext];
     console.log("data to arr", newArr);
     // console.log("in context", cvContext);
 
@@ -125,17 +126,17 @@ export default function DoneCv({ onPressNext }) {
 
       {!saved && (
         <>
-                  <AppTextInput name="cvName" label="RESUME NAME" />
+          <AppTextInput name="cvName" label="RESUME NAME" />
 
-        <TouchableOpacity
-          underlayColor="#fff"
-          style={styles.touchablebutton}
-          onPress={() => handleSaveCv()}
-        >
-          <View style={styles.mainbtn}>
-            <Text style={styles.btntext}>Save</Text>
-          </View>
-        </TouchableOpacity>
+          <TouchableOpacity
+            underlayColor="#fff"
+            style={styles.touchablebutton}
+            onPress={() => handleSaveCv()}
+          >
+            <View style={styles.mainbtn}>
+              <Text style={styles.btntext}>Save</Text>
+            </View>
+          </TouchableOpacity>
         </>
       )}
 
