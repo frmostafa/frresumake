@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Image, TouchableWithoutFeedback } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-export default function ManageResumeListItem({ contextData, noActive }) {
+export default function ManageResumeListItem({ contextData, noActive, onEditResume, onDeleteCv }) {
   const [noActiveItem, setNoActiveItem] = useState(noActive);
   useEffect(() => {
     setNoActiveItem(noActive);
@@ -30,7 +30,7 @@ export default function ManageResumeListItem({ contextData, noActive }) {
               <Text>ACTIVE</Text>
             </View>
 
-            <TouchableOpacity onPress={() => onDelteCv(savedData)}>
+            <TouchableOpacity onPress={() => onDeleteCv(contextData)}>
               <MaterialIcons name="delete-outline" size={24} color="black" />
             </TouchableOpacity>
           </View>
@@ -39,16 +39,11 @@ export default function ManageResumeListItem({ contextData, noActive }) {
           </Text>
           <Text style={styles.jobTitleText}>{contextData.jobTitle}</Text>
           <View style={styles.averageResumeContainer}>
+            <TouchableWithoutFeedback onPress={()=> onEditResume()}>
             <View style={styles.averageResumeItem}>
               <Feather name="edit" size={32} color="black" />
-              {/* <View style={styles.horiItemSpacer}></View>
-
-              <MaterialIcons
-                name="chrome-reader-mode"
-                size={36}
-                color="black"
-              /> */}
             </View>
+            </TouchableWithoutFeedback>
             <View style={styles.itemSpacer}></View>
             <View style={styles.averageResumeItem}>
               <Feather name="download" size={32} color="black" />

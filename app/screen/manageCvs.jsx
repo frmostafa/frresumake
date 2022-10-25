@@ -95,6 +95,9 @@ export default function ManageCvs({ navigation }) {
     handleDeactiveAllItem();
     navigation.navigate("make", { screen: "Basicdetail" });
   };
+  const handleEditResume = () => {
+    navigation.navigate("make", { screen: "Basicdetail" });
+  }
 
   const activeAnRandomCv = () => {
     setNoActiveItem(!noActiveItem);
@@ -147,7 +150,7 @@ export default function ManageCvs({ navigation }) {
             )}
           </View>
         )}
-        <ManageResumeListItem noActive={noActiveItem} contextData={cvContext} />
+        <ManageResumeListItem onEditResume={handleEditResume} noActive={noActiveItem} contextData={cvContext} onDeleteCv={handleDeleteCVFromLocalStorage} />
         {!noActiveItem && (
           <TouchableOpacity onPress={() => handleAddNewResume()}>
             <View style={styles.addNewBtn}>
