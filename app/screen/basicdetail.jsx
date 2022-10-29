@@ -70,6 +70,34 @@ export default function Basicdetail() {
     flatListRef.current.scrollToOffset({ offset: offset });
     console.log("off", offset);
   };
+
+  const handleActiveStep = (itemId)=>{
+    let lArr = [...stepList];
+
+    if (itemId < 7) {
+      lArr.forEach((st) => {
+        if (st.id === itemId) {
+          st.selected = true;
+        }
+        else {
+          st.selected = false;
+
+        }
+      });
+      if(itemId !== 0){
+        offset = 220 - (220/itemId);
+        flatListRef.current.scrollToOffset({ offset: offset });
+      }else{
+        offset = 0;
+        flatListRef.current.scrollToOffset({ offset: offset });
+      }
+
+    } 
+    
+    console.log("off1", offset);
+
+    setStepList(lArr);
+  }
   return (
     <Screen>
       <View style={styles.stepsContainer}>
@@ -81,9 +109,8 @@ export default function Basicdetail() {
           keyExtractor={(st) => st.id.toString()}
           renderItem={({ item }) => (
             <StepListItem
-              title={item.title}
-              iconName={item.icon}
-              selected={item.selected}
+              data={item}
+              onPress={handleActiveStep}
             />
           )}
         ></FlatList>
@@ -91,13 +118,6 @@ export default function Basicdetail() {
       <View style={styles.addDetailContainer}>
         {stepList.flatMap((step) => {
           if (step.selected === true) {
-            // if(step.id === 0){
-            //   return <AboutFields key={step.id} />;
-
-            // }else if(step.id === 1){
-            //   return <ContactFields key={step.id}/>
-
-            // }
             switch (step.id) {
               case 0:
                 return <AboutFields key={step.id} onPressNext={handleNext} />;
@@ -125,15 +145,6 @@ export default function Basicdetail() {
             }
           }
         })}
-        {/* <TouchableHighlight
-          underlayColor="#fff"
-          style={styles.touchablebutton}
-          onPress={handleNext}
-        >
-          <View style={styles.mainbtn}>
-            <Text style={styles.btntext}>NEXT</Text>
-          </View>
-        </TouchableHighlight> */}
       </View>
     </Screen>
   );

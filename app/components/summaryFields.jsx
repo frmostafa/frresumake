@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, TextInput } from "react-native";
 import AppTextInput from "./inputs/appTextInput";
 export default function SummaryFields({ onPressNext }) {
   const [number, setNumber] = useState("");
@@ -9,13 +9,16 @@ export default function SummaryFields({ onPressNext }) {
       <View>
       <Text style={styles.primaryText}>you're allmost done!</Text>
       <Text style={styles.secondaryText}>
-        we recommend to add the most recent 2 companies that you have work for
+        please add you'r resume summary!
       </Text>
-      <AppTextInput
-        placeholder="NUMBER"
-        onChangeText={(newText) => setNumber(newText)}
-        value={number}
-      />
+      <View style={styles.textInputContainer}>
+      <TextInput
+      multiline = {true}
+      style={styles.textInput}
+      numberOfLines = {10}>
+
+      </TextInput>
+        </View>
       </View>
       <TouchableOpacity
         underlayColor="#fff"
@@ -64,5 +67,20 @@ const styles = StyleSheet.create({
   },
   touchablebutton: {
     overlayColor: "#fff",
+  },
+  textInput :{
+    marginHorizontal: 30,
+    fontSize: 18,
+    width:"100%"
+  },
+  textInputContainer: {
+    width: "100%",
+    borderRadius: 25,
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    padding: 8,
+    marginVertical: 20,
+    borderColor: "#CDCDCD",
+    borderWidth: 2,
   },
 });

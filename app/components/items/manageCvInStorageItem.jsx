@@ -12,6 +12,11 @@ export default function ManageCvInStorageItem({
 }) {
   const isFocused = useIsFocused();
   const [data, setDate] = useState(savedData);
+  const eduCount = data.data.education.length;
+  const skillCount = data.data.skill.length;
+  const workCount = data.data.work.length;
+
+
 
   useEffect(() => {}, [isFocused]);
   return (
@@ -45,23 +50,23 @@ export default function ManageCvInStorageItem({
         <Text style={styles.jobTitleText}>{savedData.jobTitle}</Text>
         <View style={styles.averageResumeContainer}>
           <View style={styles.averageResumeItem}>
-            <MaterialIcons name="chrome-reader-mode" size={36} color="black" />
+            <MaterialIcons name="architecture" size={36} color="black" />
             <View style={styles.horiItemSpacer}></View>
-
-            <Text style={styles.kholaseCountText}>2</Text>
+            <Text style={styles.kholaseCountText}>{skillCount}</Text>
           </View>
           <View style={styles.itemSpacer}></View>
           <View style={styles.averageResumeItem}>
-            <MaterialIcons name="architecture" size={36} color="black" />
+            <MaterialIcons name="chrome-reader-mode" size={36} color="black" />
             <View style={styles.horiItemSpacer}></View>
-            <Text style={styles.kholaseCountText}>4</Text>
+
+            <Text style={styles.kholaseCountText}>{eduCount}</Text>
           </View>
           <View style={styles.itemSpacer}></View>
 
           <View style={styles.averageResumeItem}>
             <MaterialIcons name="shopping-bag" size={36} color="black" />
             <View style={styles.horiItemSpacer}></View>
-            <Text style={styles.kholaseCountText}>0</Text>
+            <Text style={styles.kholaseCountText}>{workCount}</Text>
           </View>
         </View>
       </View>

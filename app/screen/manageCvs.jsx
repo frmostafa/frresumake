@@ -8,6 +8,9 @@ import {
   FlatList,
   ScrollView,
 } from "react-native";
+import * as Print from 'expo-print';
+import * as MediaLibrary from "expo-media-library";
+import * as Sharing from "expo-sharing";
 import Screen from "./screen";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -19,11 +22,51 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ManageCvInStorageItem from "../components/items/manageCvInStorageItem";
 import Basicdetail from "./basicdetail";
 
+const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pdf Content</title>
+        <style>
+            body {
+                font-size: 16px;
+                color: rgb(255, 196, 0);
+            }
+            h1 {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Hello, UppLabs!</h1>
+    </body>
+    </html>
+`;
+
 export default function ManageCvs({ navigation }) {
   const [cvContext, setCvContext] = useContext(cvsContext);
   const [allCv, setAllCv] = useState([]);
   const [noActiveItem, setNoActiveItem] = useState();
   const isFocused = useIsFocused();
+
+  const createAndSavePDF = async (html) => {
+    try {
+      const { uri } = await Print.printToFileAsync({ html });
+      if (Platform.OS === "ios") {
+        await Sharing.shareAsync(uri);
+      } else {
+        const permission = await MediaLibrary.requestPermissionsAsync();
+        if (permission.granted) {
+          console.log("permision darim")
+          await MediaLibrary.createAssetAsync(uri);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const storeData = async (value) => {
     try {
@@ -119,6 +162,10 @@ export default function ManageCvs({ navigation }) {
     console.log("what");
   }, [isFocused, noActiveItem]);
 
+  const handlePdfSave = () =>
+  {
+    createAndSavePDF(htmlContent)
+  }
   useEffect(() => {
     handleDeactiveAllItem();
   }, []);
@@ -150,7 +197,7 @@ export default function ManageCvs({ navigation }) {
             )}
           </View>
         )}
-        <ManageResumeListItem onEditResume={handleEditResume} noActive={noActiveItem} contextData={cvContext} onDeleteCv={handleDeleteCVFromLocalStorage} />
+        <ManageResumeListItem onSavePdfResume={handlePdfSave} onEditResume={handleEditResume} noActive={noActiveItem} contextData={cvContext} onDeleteCv={handleDeleteCVFromLocalStorage} />
         {!noActiveItem && (
           <TouchableOpacity onPress={() => handleAddNewResume()}>
             <View style={styles.addNewBtn}>
@@ -174,23 +221,8 @@ export default function ManageCvs({ navigation }) {
               />
             ) : null
           )}
-          {/* {allCv.map((item) => (
-            <ManageCvInStorageItem
-              key={item.id}
-              savedData={item}
-              onActiveItemChange={handleChangeActiveItem}
-              onDelteCv={handleDeleteCVFromLocalStorage}
-            />
-          ))} */}
+      
         </View>
-        {/* <FlatList
-        style={styles.storageCvsFlatList}
-        data={allCv}
-        keyExtractor={(key) => key.id.toString()}
-        renderItem={({ item }) => (
-          <ManageCvInStorageItem savedData={item} onActiveItemChange={handleChangeActiveItem} onDelteCv={handleDeleteCVFromLocalStorage} />
-        )}
-        ></FlatList> */}
       </ScrollView>
     </Screen>
   );

@@ -1,11 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useContext, useEffect, useState } from "react";
+import Toast from 'react-native-toast-message';
 import {
   Text,
   StyleSheet,
   View,
   TouchableOpacity,
   ScrollView,
+  TouchableHighlight,
 } from "react-native";
 import { cvsContext } from "../context/cvsContext";
 import AppTextInput from "./inputs/appTextInput";
@@ -29,6 +31,14 @@ export default function DoneCv({ onPressNext }) {
       // saving error
     }
   };
+
+  const showToast = (type, title, text) => {
+    Toast.show({
+      type: type,
+      text1: title,
+      text2: text
+    });
+  }
 
   const getData = async () => {
     try {
@@ -88,20 +98,33 @@ export default function DoneCv({ onPressNext }) {
     console.log("data to arr", newArr);
     // console.log("in context", cvContext);
 
-    storeData(newArr);
+    // Toast.show({
+    //   type: "success",
+    //   text1: "hooooray",
+    //   text2: "now toast is here!"
+    // });   
+    showToast("success", "hoooraay" , `${cvContext["cvName"]} is updated :)`);
+   
+
+     storeData(newArr);
+    
   };
   return (
     <View style={styles.detail}>
+      <View style={styles.scrollViewWrapper}>
+
       <Ionicons name="checkmark-done-circle" style={styles.donelogo} />
       <Text style={styles.primaryText}>you're allmost done!</Text>
+      </View>
 
       {saved && (
-        <ScrollView>
+        <ScrollView >
+          <View style={styles.scrollViewWrapper}>
           <Text style={styles.secondaryText}>
             this cv already saved as : {cvContext["cvName"]}
           </Text>
 
-          <TouchableOpacity
+          <TouchableHighlight
             underlayColor="#fff"
             style={styles.touchablebutton}
             onPress={() => handleUpdateCv()}
@@ -109,10 +132,10 @@ export default function DoneCv({ onPressNext }) {
             <View style={styles.mainbtn}>
               <Text style={styles.btntext}>UPDATE '{cvContext["cvName"]}'</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableHighlight>
           <AppTextInput name="cvName" label="RESUME NAME" />
 
-          <TouchableOpacity
+          <TouchableHighlight
             underlayColor="#fff"
             style={styles.touchablebutton}
             onPress={() => handleSaveCv()}
@@ -120,7 +143,8 @@ export default function DoneCv({ onPressNext }) {
             <View style={styles.mainbtn}>
               <Text style={styles.btntext}>Add as New CV</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableHighlight>
+          </View>
         </ScrollView>
       )}
 
@@ -128,7 +152,7 @@ export default function DoneCv({ onPressNext }) {
         <>
           <AppTextInput name="cvName" label="RESUME NAME" />
 
-          <TouchableOpacity
+          <TouchableHighlight
             underlayColor="#fff"
             style={styles.touchablebutton}
             onPress={() => handleSaveCv()}
@@ -136,32 +160,27 @@ export default function DoneCv({ onPressNext }) {
             <View style={styles.mainbtn}>
               <Text style={styles.btntext}>Save</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableHighlight>
         </>
       )}
-
-      <TouchableOpacity
-        underlayColor="#fff"
-        style={styles.touchablebutton}
-        onPress={onPressNext}
-      >
-        <View style={styles.mainbtn}>
-          <Text style={styles.btntext}>BACK TO Editing</Text>
-        </View>
-      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollViewWrapper : {
+    flexDirection : "column",
+    alignItems : "center"
+    
+  },
   donelogo: {
     fontSize: 100,
     color: "green",
     marginTop: 15,
   },
   detail: {
-    alignItems: "center",
     width: "100%",
+
   },
   primaryText: {
     fontSize: 24,

@@ -4,7 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-export default function ManageResumeListItem({ contextData, noActive, onEditResume, onDeleteCv }) {
+export default function ManageResumeListItem({ contextData, noActive, onEditResume, onDeleteCv, onSavePdfResume }) {
   const [noActiveItem, setNoActiveItem] = useState(noActive);
   useEffect(() => {
     setNoActiveItem(noActive);
@@ -45,12 +45,12 @@ export default function ManageResumeListItem({ contextData, noActive, onEditResu
             </View>
             </TouchableWithoutFeedback>
             <View style={styles.itemSpacer}></View>
+            <TouchableWithoutFeedback onPress={()=> onSavePdfResume()}>
+
             <View style={styles.averageResumeItem}>
               <Feather name="download" size={32} color="black" />
-              {/* <View style={styles.horiItemSpacer}></View>
-
-              <MaterialIcons name="architecture" size={36} color="black" /> */}
             </View>
+            </TouchableWithoutFeedback>
             <View style={styles.itemSpacer}></View>
 
             <View style={styles.averageResumeItem}>

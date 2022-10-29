@@ -12,6 +12,7 @@ export const clearCv =  {
   number: "",
   website: "",
   address: "",
+  summary : "",
   data: {
     education: [],
     skill: [],

@@ -9,6 +9,8 @@ import ShowCv from "./app/screen/showCv";
 import { clearCv, currentcv, cvsContext } from "./app/context/cvsContext";
 import ManageCvs from "./app/screen/manageCvs";
 import { useState } from "react";
+import Toast from 'react-native-toast-message';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -17,6 +19,7 @@ export default function App() {
 
   return (
     <cvsContext.Provider value={[cvContext, setCvContext]}>
+
       <NavigationContainer>
         <Tab.Navigator
           screenOptions={({ route }) => ({
@@ -56,6 +59,8 @@ export default function App() {
           <Tab.Screen name="show" component={ShowCv} />
         </Tab.Navigator>
       </NavigationContainer>
+      <Toast />
+
     </cvsContext.Provider>
   );
 }

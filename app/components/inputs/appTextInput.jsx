@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
   textInput: {
     marginHorizontal: 30,
     fontSize: 18,
+    width:"100%"
   },
   icon: {
     marginHorizontal: 15,
