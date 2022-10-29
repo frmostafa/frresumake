@@ -5,10 +5,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 export default function StepListItem({ data, onPress }) {
   return (
-    <TouchableHighlight underlayColor="#fff" onPress={()=>onPress(data.id)}>
+    <TouchableHighlight underlayColor="#fff" onPress={() => onPress(data.id)}>
       <View
         style={[
-            data.selected === true ? styles.stepContainerActive : styles.stepContainer,
+          data.selected === true
+            ? styles.stepContainerActive
+            : styles.stepContainer,
         ]}
       >
         <MaterialIcons
@@ -41,7 +43,7 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   stepContainer: {
-    width: 60,
+    width: 70,
     height: 60,
     marginHorizontal: 12,
     flexDirection: "column",
@@ -52,7 +54,7 @@ const styles = StyleSheet.create({
     paddingBottom: 1,
   },
   stepContainerActive: {
-    width: 60,
+    width: 70,
     height: 60,
     marginHorizontal: 12,
     flexDirection: "column",

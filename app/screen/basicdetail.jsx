@@ -71,33 +71,30 @@ export default function Basicdetail() {
     console.log("off", offset);
   };
 
-  const handleActiveStep = (itemId)=>{
+  const handleActiveStep = (itemId) => {
     let lArr = [...stepList];
 
     if (itemId < 7) {
       lArr.forEach((st) => {
         if (st.id === itemId) {
           st.selected = true;
-        }
-        else {
+        } else {
           st.selected = false;
-
         }
       });
-      if(itemId !== 0){
-        offset = 220 - (220/itemId);
+      if (itemId !== 0) {
+        offset = 220 - 220 / itemId;
         flatListRef.current.scrollToOffset({ offset: offset });
-      }else{
+      } else {
         offset = 0;
         flatListRef.current.scrollToOffset({ offset: offset });
       }
+    }
 
-    } 
-    
     console.log("off1", offset);
 
     setStepList(lArr);
-  }
+  };
   return (
     <Screen>
       <View style={styles.stepsContainer}>
@@ -108,10 +105,7 @@ export default function Basicdetail() {
           ref={flatListRef}
           keyExtractor={(st) => st.id.toString()}
           renderItem={({ item }) => (
-            <StepListItem
-              data={item}
-              onPress={handleActiveStep}
-            />
+            <StepListItem data={item} onPress={handleActiveStep} />
           )}
         ></FlatList>
       </View>

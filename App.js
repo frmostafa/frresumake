@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Basicdetail from "./app/screen/basicdetail";
@@ -9,8 +9,7 @@ import ShowCv from "./app/screen/showCv";
 import { clearCv, currentcv, cvsContext } from "./app/context/cvsContext";
 import ManageCvs from "./app/screen/manageCvs";
 import { useState } from "react";
-import Toast from 'react-native-toast-message';
-
+import Toast from "react-native-toast-message";
 
 const Tab = createBottomTabNavigator();
 
@@ -19,10 +18,10 @@ export default function App() {
 
   return (
     <cvsContext.Provider value={[cvContext, setCvContext]}>
-
       <NavigationContainer>
         <Tab.Navigator
           screenOptions={({ route }) => ({
+            tabBarHideOnKeyboard: Platform.OS !== "ios",
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
               if (route.name === "make") {
@@ -60,7 +59,6 @@ export default function App() {
         </Tab.Navigator>
       </NavigationContainer>
       <Toast />
-
     </cvsContext.Provider>
   );
 }
