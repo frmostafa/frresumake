@@ -1,10 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Text, StyleSheet, View, TextInput, Button } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  View,
+  TextInput,
+  Button,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { cvsContext } from "../../context/cvsContext";
 import uuid from "react-native-uuid";
 
-export default function AddWorkModal({ fields, toggleVisibility, type }) {
+export default function AddWorkModal({ fields, toggleVisibility, type, onClosePress }) {
   const [filedsOption, setFieldsOption] = useState(fields);
   const [cvContext, setCvContext] = useContext(cvsContext);
 
@@ -38,6 +46,11 @@ export default function AddWorkModal({ fields, toggleVisibility, type }) {
   }, []);
   return (
     <View style={styles.detail}>
+      <TouchableWithoutFeedback onPress={()=> onClosePress() }>
+        <View style={styles.closebtnWrapper}>
+          <AntDesign name="closecircleo" size={24} color="black" />
+        </View>
+      </TouchableWithoutFeedback>
       {filedsOption.flatMap((field) => (
         <View style={styles.textInputContainer} key={field.id}>
           <TextInput
@@ -56,6 +69,11 @@ export default function AddWorkModal({ fields, toggleVisibility, type }) {
 }
 
 const styles = StyleSheet.create({
+  closebtnWrapper: {
+    justifyContent: "flex-end",
+    flexDirection: "row",
+    padding: 15,
+  },
   textInputContainer: {
     width: "100%",
     borderRadius: 25,

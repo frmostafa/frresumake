@@ -6,7 +6,7 @@ import {
   View,
   Button,
   TextInput,
-  TouchableHighlight,
+  KeyboardAvoidingView,
 } from "react-native";
 import AboutFields from "../components/aboutFields";
 import AppTextInput from "../components/inputs/appTextInput";
@@ -18,6 +18,8 @@ import SummaryFields from "../components/summaryFields";
 import WorkFields from "../components/workFields";
 import Screen from "./screen";
 import DoneCv from "../components/doneCv";
+import Constants from 'expo-constants'
+
 
 let offset = 0;
 
@@ -96,7 +98,11 @@ export default function Basicdetail() {
     setStepList(lArr);
   };
   return (
-    <Screen>
+    // <Screen>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      style={styles.screenContainer}
+      >
       <View style={styles.stepsContainer}>
         <Text style={styles.headerText}>FR Resumeake</Text>
         <FlatList
@@ -109,7 +115,7 @@ export default function Basicdetail() {
           )}
         ></FlatList>
       </View>
-      <View style={styles.addDetailContainer}>
+      {/* <View style={styles.addDetailContainer}> */}
         {stepList.flatMap((step) => {
           if (step.selected === true) {
             switch (step.id) {
@@ -139,12 +145,20 @@ export default function Basicdetail() {
             }
           }
         })}
-      </View>
-    </Screen>
+      {/* </View> */}
+      </KeyboardAvoidingView>
+    // {/* </Screen> */}
   );
 }
 
 const styles = StyleSheet.create({
+  screenContainer: {
+    flex: 1,
+    // justifyContent: "center",
+    padding: '5%',
+    marginTop: Constants.statusBarHeight,
+    backgroundColor: '#fff'
+  },
   headerText: {
     fontSize: 36,
     marginHorizontal: 16,
@@ -154,7 +168,6 @@ const styles = StyleSheet.create({
   },
   stepsContainer: {
     display: "flex",
-    flex: 2,
   },
   addDetailContainer: {
     paddingHorizontal: 25,

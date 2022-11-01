@@ -17,12 +17,12 @@ export default function ManageResumeListItem({ contextData, noActive, onEditResu
     >
       {/* {!noActiveItem && ( */}
       {/* <View> */}
-      {!noActiveItem && (
+      {/* {!noActiveItem && (
         <Image
           style={styles.profileImgStyle}
           source={require("../../assets/image/user.png")}
         />
-      )}
+      )} */}
       {!noActiveItem && (
         <View style={styles.mcWrapper}>
           <View style={styles.itemActionWrapper}>
@@ -34,6 +34,10 @@ export default function ManageResumeListItem({ contextData, noActive, onEditResu
               <MaterialIcons name="delete-outline" size={24} color="black" />
             </TouchableOpacity>
           </View>
+           <Image
+          style={styles.profileImgStyle}
+          source={require("../../assets/image/user.png")}
+        />
           <Text style={styles.nameText}>
             {contextData.name} {contextData.lName}
           </Text>
@@ -81,6 +85,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 10,
+    marginTop : 15
   },
   jobTitleText: {
     fontSize: 18,
@@ -97,9 +102,7 @@ const styles = StyleSheet.create({
   profileImgStyle: {
     width: 100,
     height: 100,
-    position: "absolute",
-    top: -50,
-    left: "35%",
+
   },
   averageResumeItem: {
     alignItems: "center",
@@ -127,13 +130,11 @@ const styles = StyleSheet.create({
   cvContainer: {
     height: "auto",
     width: "100%",
-    marginTop: 60,
     alignItems: "center",
   },
   mcWrapper: {
     width: "100%",
     flexDirection: "column",
-    marginTop: 60,
     alignItems: "center",
   },
 });

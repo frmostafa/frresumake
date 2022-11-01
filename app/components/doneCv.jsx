@@ -88,6 +88,8 @@ export default function DoneCv({ onPressNext }) {
     handleChangeActiveItem(cvData);
     storeData(lArr);
     getData();
+    showToast("success", "tabriiiik!" , `${cvContext["cvName"]} is added :)`);
+
     // navigation.navigate("show", { screen: "ShowCv" });
   };
   const handleUpdateCv = () => {
@@ -149,7 +151,7 @@ export default function DoneCv({ onPressNext }) {
       )}
 
       {!saved && (
-        <>
+        <View style={styles.nextBtnWrapper}>
           <AppTextInput name="cvName" label="RESUME NAME" />
 
           <TouchableHighlight
@@ -161,13 +163,17 @@ export default function DoneCv({ onPressNext }) {
               <Text style={styles.btntext}>Save</Text>
             </View>
           </TouchableHighlight>
-        </>
+        </View>
       )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  nextBtnWrapper : {
+    alignItems :'center',
+    flexDirection : "column"
+  },
   scrollViewWrapper : {
     flexDirection : "column",
     alignItems : "center"

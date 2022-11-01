@@ -7,8 +7,13 @@ import {
   Image,
   FlatList,
   ScrollView,
+  StatusBar,
+  WebView
 } from "react-native";
-import * as Print from 'expo-print';
+import * as Linking from 'expo-linking';
+import * as FileSystem from 'expo-file-system';
+
+import {printToFileAsync} from "expo-print";
 import * as MediaLibrary from "expo-media-library";
 import * as Sharing from "expo-sharing";
 import Screen from "./screen";
@@ -21,28 +26,36 @@ import { useIsFocused } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ManageCvInStorageItem from "../components/items/manageCvInStorageItem";
 import Basicdetail from "./basicdetail";
+import ManageCvSkeleton from "../skeleton/manageCvSkeleton";
 
 const htmlContent = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Pdf Content</title>
-        <style>
-            body {
-                font-size: 16px;
-                color: rgb(255, 196, 0);
-            }
-            h1 {
-                text-align: center;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>Hello, UppLabs!</h1>
-    </body>
-    </html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pdf Content</title>
+    <style>
+        .body {
+            font-size: 16px;
+            display : flex,
+  
+    flex-direction : column;
+        }
+        .nameField {
+            text-align: center;
+    color : "#7a5050"
+        }
+    </style>
+</head>
+<body class="body">
+    <h1 class="nameField">Mostafa faryabi</h1>
+        <h3 class="nameField">Frontent Developer</h3>
+    <div>
+    <hr/>
+    </div>
+
+</body>
+</html>
 `;
 
 export default function ManageCvs({ navigation }) {
@@ -50,19 +63,30 @@ export default function ManageCvs({ navigation }) {
   const [allCv, setAllCv] = useState([]);
   const [noActiveItem, setNoActiveItem] = useState();
   const isFocused = useIsFocused();
-
+  const [isLoading, setIsLoading] = useState(true);
   const createAndSavePDF = async (html) => {
     try {
-      const { uri } = await Print.printToFileAsync({ html });
-      if (Platform.OS === "ios") {
+      const { uri } = await printToFileAsync({ html: htmlContent,
+    });
+      
+      // if (Platform.OS === "ios") {
         await Sharing.shareAsync(uri);
-      } else {
-        const permission = await MediaLibrary.requestPermissionsAsync();
-        if (permission.granted) {
-          console.log("permision darim")
-          await MediaLibrary.createAssetAsync(uri);
-        }
-      }
+      // } else {
+      //   const permission = await MediaLibrary.requestPermissionsAsync();
+      //   if (permission.granted) {
+      //     // await MediaLibrary.createAssetAsync(uri);
+      //     // await Linking.openURL('https://expo.dev');
+      //     const dirInfo = await FileSystem.getInfoAsync(uri);
+      //     if (dirInfo.exists) {
+      //       const contentUri = await FileSystem.getContentUriAsync(uri);
+      //       console.log("permision darim",contentUri);
+
+      //       await Linking.openURL(contentUri);
+      //     }
+
+      
+      //   }
+      // }
     } catch (error) {
       console.error(error);
     }
@@ -140,7 +164,7 @@ export default function ManageCvs({ navigation }) {
   };
   const handleEditResume = () => {
     navigation.navigate("make", { screen: "Basicdetail" });
-  }
+  };
 
   const activeAnRandomCv = () => {
     setNoActiveItem(!noActiveItem);
@@ -150,6 +174,7 @@ export default function ManageCvs({ navigation }) {
     storeData(lArr);
   };
   useEffect(() => {
+    setIsLoading(true);
     getData();
     let lArr = [...allCv];
     let bool = true;
@@ -159,71 +184,86 @@ export default function ManageCvs({ navigation }) {
       }
     });
     setNoActiveItem(bool);
-    console.log("what");
+    setInterval(() => {
+      setIsLoading(false);
+    }, 3000);
   }, [isFocused, noActiveItem]);
 
-  const handlePdfSave = () =>
-  {
-    createAndSavePDF(htmlContent)
-  }
+  const handlePdfSave = () => {
+    createAndSavePDF(htmlContent);
+  };
   useEffect(() => {
+    // setIsLoading(true);
     handleDeactiveAllItem();
+    // setInterval(()=> {setIsLoading(false)}, 5000);
   }, []);
 
   return (
     <Screen>
-      <ScrollView>
-        {noActiveItem && (
-          <View style={styles.noActiveWrapper}>
-            <TouchableOpacity onPress={() => handleAddNewResume()}>
-              <LinearGradient
-                // Background Linear Gradient
-                colors={["#EAE174", "#1AF2F1"]}
-                style={styles.noItemBtn}
-              >
-                <Text style={styles.noItemBtnText}>Add New cv</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-            {allCv.length != 0 && (
-              <TouchableOpacity onPress={() => activeAnRandomCv()}>
+    <StatusBar barStyle="light-content" backgroundColor="#6a51ae" />
+
+      {isLoading ? (
+        <ManageCvSkeleton isLoading={isLoading} />
+      ) : (
+        <ScrollView>
+          {noActiveItem && (
+            <View style={styles.noActiveWrapper}>
+
+              <TouchableOpacity onPress={() => handleAddNewResume()}>
                 <LinearGradient
                   // Background Linear Gradient
-                  colors={["#EAE174", "#1AF2F1"]}
+                  colors={["#DAA641", "#1AF2F1"]}
                   style={styles.noItemBtn}
                 >
-                  <Text style={styles.noItemBtnText}>Active a cv</Text>
+                  <Text style={styles.noItemBtnText}>Add New cv</Text>
                 </LinearGradient>
               </TouchableOpacity>
+              {allCv.length != 0 && (
+                <TouchableOpacity onPress={() => activeAnRandomCv()}>
+                  <LinearGradient
+                    // Background Linear Gradient
+                    colors={["#DAA641", "#1AF2F1"]}
+                    style={styles.noItemBtn}
+                  >
+                    <Text style={styles.noItemBtnText}>Active a cv</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+          <ManageResumeListItem
+            onSavePdfResume={handlePdfSave}
+            onEditResume={handleEditResume}
+            noActive={noActiveItem}
+            contextData={cvContext}
+            onDeleteCv={handleDeleteCVFromLocalStorage}
+          />
+          {!noActiveItem && (
+            <TouchableOpacity onPress={() => handleAddNewResume()}>
+              <View style={styles.addNewBtn}>
+                <MaterialCommunityIcons
+                  style={styles.addBtnText}
+                  name="plus-circle-outline"
+                  color="black"
+                />
+                <Text style={styles.addBtnText}>add new Resume</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+          <View style={styles.storageCvsFlatList}>
+            {allCv.flatMap((elem) =>
+              !elem.activeCv ? (
+                <ManageCvInStorageItem
+                  key={elem.id}
+                  savedData={elem}
+                  onActiveItemChange={handleChangeActiveItem}
+                  onDelteCv={handleDeleteCVFromLocalStorage}
+                />
+              ) : null
             )}
           </View>
-        )}
-        <ManageResumeListItem onSavePdfResume={handlePdfSave} onEditResume={handleEditResume} noActive={noActiveItem} contextData={cvContext} onDeleteCv={handleDeleteCVFromLocalStorage} />
-        {!noActiveItem && (
-          <TouchableOpacity onPress={() => handleAddNewResume()}>
-            <View style={styles.addNewBtn}>
-              <MaterialCommunityIcons
-                style={styles.addBtnText}
-                name="plus-circle-outline"
-                color="black"
-              />
-              <Text style={styles.addBtnText}>add new Resume</Text>
-            </View>
-          </TouchableOpacity>
-        )}
-        <View style={styles.storageCvsFlatList}>
-          {allCv.flatMap((elem) =>
-            !elem.activeCv ? (
-              <ManageCvInStorageItem
-                key={elem.id}
-                savedData={elem}
-                onActiveItemChange={handleChangeActiveItem}
-                onDelteCv={handleDeleteCVFromLocalStorage}
-              />
-            ) : null
-          )}
-      
-        </View>
-      </ScrollView>
+        </ScrollView>
+      )}
     </Screen>
   );
 }

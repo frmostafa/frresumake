@@ -42,7 +42,7 @@ export default function EducationFields({ onPressNext }) {
       <View style={styles.detail}>
         <Text style={styles.primaryText}>your education</Text>
         <Text style={styles.secondaryText}>
-          we recommend to add the most recent 2 companies that you have educate in
+          we recommend to add the most recent 2 schools that you have educate in
         </Text>
         {cvContext.data["education"].map((item) => (
           <DataListItem key={item.id} data={item} />
@@ -69,11 +69,12 @@ export default function EducationFields({ onPressNext }) {
         </View>
       </TouchableHighlight>
       <Modal visible={modalVisible} animationType={"slide"}>
-        <Button title="close" onPress={() => setModalVisible(false)}></Button>
+        {/* <Button title="close" onPress={() => setModalVisible(false)}></Button> */}
         <AddWorkModal
           type="education"
           toggleVisibility={toggleModalVisiblity}
           fields={modalFields}
+          onClosePress={() => setModalVisible(false)}
         />
       </Modal>
     </>
@@ -92,12 +93,12 @@ const styles = StyleSheet.create({
   primaryText: {
     fontSize: 24,
     marginHorizontal: 8,
-    marginTop: 36,
+    marginTop: 30,
   },
   secondaryText: {
-    marginTop: 36,
+    marginTop: 30,
     marginHorizontal: 8,
-    marginBottom: 40,
+    marginBottom: 30,
     fontSize: 16,
   },
   addNewBtn: {

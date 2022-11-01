@@ -41,7 +41,7 @@ export default function WorkFields({ onPressNext }) {
   }, []);
   return (
     <>
-      <View style={styles.detail}>
+      <View >
         <Text style={styles.primaryText}>your work experience</Text>
         <Text style={styles.secondaryText}>
           we recommend to add the most recent 2 companies that you have work for
@@ -71,11 +71,12 @@ export default function WorkFields({ onPressNext }) {
         </View>
       </TouchableHighlight>
       <Modal visible={modalVisible} animationType={"slide"}>
-        <Button title="close" onPress={() => setModalVisible(false)}></Button>
         <AddDataModal
           type="work"
           toggleVisibility={toggleModalVisiblity}
           fields={modalFields}
+          onClosePress={() => setModalVisible(false)}
+
         />
       </Modal>
     </>
@@ -83,8 +84,11 @@ export default function WorkFields({ onPressNext }) {
 }
 
 const styles = StyleSheet.create({
-  detail: {
-    display: "flex",
+  mainContainer : {
+    justifyContent : "space-between",
+    flexDirection : "column",
+    display : 'flex'
+
   },
   primaryText: {
     fontSize: 24,
@@ -125,5 +129,6 @@ const styles = StyleSheet.create({
   },
   touchablebutton: {
     overlayColor: "#fff",
+    marginVertical : 15
   },
 });

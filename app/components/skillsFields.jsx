@@ -6,19 +6,40 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   FlatList,
+  Modal,
 } from "react-native";
 import AppTextInput from "./inputs/appTextInput";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { cvsContext } from "../context/cvsContext";
 import DataListItem from "./dataListItem";
+import AddWorkModal from "./modals/addDataModal";
 
+const modalFields = [
+  { id: 1, Type: "textInput", name: "primary", value: "", label: "Skill" },
+  { id: 2, Type: "textInput", name: "secondary", value: "", label: "where" },
+  { id: 3, Type: "textInput", name: "city", value: "", label: "CITY" },
+  { id: 4, Type: "textInput", name: "country", value: "", label: "COUNTRY" },
+  {
+    id: 5,
+    Type: "textInput",
+    name: "startDate",
+    value: "",
+    label: "START DATE",
+  },
+  { id: 6, Type: "textInput", name: "endDate", value: "", label: "End Date" },
+];
 export default function SkillsFields({ onPressNext }) {
   const [number, setNumber] = useState("");
   const [cvContext] = useContext(cvsContext);
+  const [modalVisible, setModalVisible] = useState(false);
 
+
+  const toggleModalVisiblity = () => {
+    setModalVisible(!modalVisible);
+  };
   return (
+    <>
     <View style={styles.detail}>
-      <View >
       <Text style={styles.primaryText}>skills</Text>
       <Text style={styles.secondaryText}>
         we recommend to add the most recent 2 companies that you have work for
@@ -27,7 +48,7 @@ export default function SkillsFields({ onPressNext }) {
         <DataListItem key={item.id} data={item} />
       ))}
 
-      <TouchableOpacity onPress={() => console.log("add new")}>
+      <TouchableOpacity onPress={() => setModalVisible(true)}>
         <View style={styles.addNewBtn}>
           <MaterialCommunityIcons
             style={styles.addBtnText}
@@ -38,6 +59,7 @@ export default function SkillsFields({ onPressNext }) {
         </View>
       </TouchableOpacity>
       </View>
+
       <TouchableHighlight
         underlayColor="#fff"
         style={styles.touchablebutton}
@@ -47,15 +69,22 @@ export default function SkillsFields({ onPressNext }) {
           <Text style={styles.btntext}>NEXT</Text>
         </View>
       </TouchableHighlight>
-    </View>
+      <Modal visible={modalVisible} animationType={"slide"}>
+        {/* <Button title="close" onPress={() => setModalVisible(false)}></Button> */}
+        <AddWorkModal
+          type="skill"
+          toggleVisibility={toggleModalVisiblity}
+          fields={modalFields}
+          onClosePress={() => setModalVisible(false)}
+        />
+      </Modal>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   detail: {
     display: "flex",
-    height : "100%",
-    justifyContent : "space-between"
   },
   primaryText: {
     fontSize: 24,

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Text, View, StyleSheet, TouchableHighlight } from "react-native";
+import { Text, View, StyleSheet, TouchableHighlight, ScrollView } from "react-native";
 import { cvs, cvsContext } from "../context/cvsContext";
 import AppTextInput from "./inputs/appTextInput";
 
@@ -11,7 +11,7 @@ export default function AboutFields({ onPressNext }) {
   // const [jobTiltle, setJobTitle] = useState("");
 
   return (
-    <View style={styles.detail}>
+    <ScrollView style={styles.detail}>
       <Text style={styles.primaryText}>Let's get started with your name!</Text>
       <Text style={styles.secondaryText}>what is your name?</Text>
       <AppTextInput label="FIRST NAME" name="name" />
@@ -27,7 +27,7 @@ export default function AboutFields({ onPressNext }) {
           <Text style={styles.btntext}>NEXT</Text>
         </View>
       </TouchableHighlight>
-    </View>
+    </ScrollView>
   );
 }
 

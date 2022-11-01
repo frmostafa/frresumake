@@ -35,7 +35,6 @@ export default function AppTextInput({ icon, label, name, ...otherProps }) {
 const styles = StyleSheet.create({
   textInputContainer: {
     width: "100%",
-    borderRadius: 25,
     backgroundColor: "#fff",
     flexDirection: "row",
     padding: 8,

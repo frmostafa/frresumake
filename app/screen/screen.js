@@ -14,7 +14,7 @@ export default function Screen({children}) {
 
 const styles = StyleSheet.create({
     screen : {
-        paddingTop : Constant.statusBarHeight,
+        paddingTop : Platform.OS === "ios" ? Constant.statusBarHeight : 0,
         backgroundColor : "#FFFFFF",
         flex :1,
     }
