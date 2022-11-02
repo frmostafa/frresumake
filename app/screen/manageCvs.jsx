@@ -8,7 +8,7 @@ import {
   FlatList,
   ScrollView,
   StatusBar,
-  WebView
+  useColorScheme 
 } from "react-native";
 import * as Linking from 'expo-linking';
 import * as FileSystem from 'expo-file-system';
@@ -27,36 +27,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ManageCvInStorageItem from "../components/items/manageCvInStorageItem";
 import Basicdetail from "./basicdetail";
 import ManageCvSkeleton from "../skeleton/manageCvSkeleton";
+import HtmlGenerator from "../utility/htmlGenerator";
 
-const htmlContent = `
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pdf Content</title>
-    <style>
-        .body {
-            font-size: 16px;
-            display : flex,
-  
-    flex-direction : column;
-        }
-        .nameField {
-            text-align: center;
-    color : "#7a5050"
-        }
-    </style>
-</head>
-<body class="body">
-    <h1 class="nameField">Mostafa faryabi</h1>
-        <h3 class="nameField">Frontent Developer</h3>
-    <div>
-    <hr/>
-    </div>
-
-</body>
-</html>
-`;
 
 export default function ManageCvs({ navigation }) {
   const [cvContext, setCvContext] = useContext(cvsContext);
@@ -64,13 +36,19 @@ export default function ManageCvs({ navigation }) {
   const [noActiveItem, setNoActiveItem] = useState();
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
-  const createAndSavePDF = async (html) => {
+  const colorScheme = useColorScheme();
+
+  const createAndSavePDF = async () => {
+    const GeneratedHtml = HtmlGenerator(cvContext);
+
     try {
-      const { uri } = await printToFileAsync({ html: htmlContent,
+      const { uri } = await printToFileAsync({ html: GeneratedHtml,
     });
-      
-      // if (Platform.OS === "ios") {
-        await Sharing.shareAsync(uri);
+    await Sharing.shareAsync(uri);
+    console.log("html data here" , HtmlGenerator(cvContext));
+
+    // if (Platform.OS === "ios") {
+      //await Sharing.shareAsync(uri);
       // } else {
       //   const permission = await MediaLibrary.requestPermissionsAsync();
       //   if (permission.granted) {
@@ -80,11 +58,8 @@ export default function ManageCvs({ navigation }) {
       //     if (dirInfo.exists) {
       //       const contentUri = await FileSystem.getContentUriAsync(uri);
       //       console.log("permision darim",contentUri);
-
       //       await Linking.openURL(contentUri);
       //     }
-
-      
       //   }
       // }
     } catch (error) {
@@ -174,6 +149,8 @@ export default function ManageCvs({ navigation }) {
     storeData(lArr);
   };
   useEffect(() => {
+    console.log("what is color" , colorScheme);
+
     setIsLoading(true);
     getData();
     let lArr = [...allCv];
@@ -190,7 +167,7 @@ export default function ManageCvs({ navigation }) {
   }, [isFocused, noActiveItem]);
 
   const handlePdfSave = () => {
-    createAndSavePDF(htmlContent);
+    createAndSavePDF();
   };
   useEffect(() => {
     // setIsLoading(true);

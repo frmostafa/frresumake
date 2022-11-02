@@ -19,6 +19,7 @@ import WorkFields from "../components/workFields";
 import Screen from "./screen";
 import DoneCv from "../components/doneCv";
 import Constants from 'expo-constants'
+import { Platform } from "react-native";
 
 
 let offset = 0;
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
     flex: 1,
     // justifyContent: "center",
     padding: '5%',
-    marginTop: Constants.statusBarHeight,
+    marginTop: Platform.OS === "ios" ? Constants.statusBarHeight : 0,
     backgroundColor: '#fff'
   },
   headerText: {
