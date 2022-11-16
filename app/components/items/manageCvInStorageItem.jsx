@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
+import { Dimensions } from "react-native";
+// import { useDimensions } from "../../utility/hooks/useDimensions";
+const { width } = Dimensions.get('window');
 
 export default function ManageCvInStorageItem({
   savedData,
   onActiveItemChange,
   onDelteCv,
+  
 }) {
   const isFocused = useIsFocused();
   const [data, setDate] = useState(savedData);
@@ -19,13 +23,17 @@ export default function ManageCvInStorageItem({
 
 
   useEffect(() => {}, [isFocused]);
+
+  
   return (
     <LinearGradient
       // Background Linear Gradient
       colors={["#EAE174", "#1AF2F1"]}
       style={styles.cvContainer}
+
     >
-      <View style={styles.mcWrapper}>
+      <View style={styles.mcWrapper}  
+>
         <View style={styles.itemActionWrapper}>
           {!savedData.activeCv && (
             <TouchableOpacity onPress={() => onActiveItemChange(savedData)}>
@@ -69,6 +77,8 @@ export default function ManageCvInStorageItem({
             <Text style={styles.kholaseCountText}>{workCount}</Text>
           </View>
         </View>
+
+        
       </View>
     </LinearGradient>
   );
@@ -83,14 +93,16 @@ const styles = StyleSheet.create({
   ItemBadgeOrange: {
     backgroundColor: "#ff9900",
     padding: 7,
+    marginLeft : 10,
     borderRadius: 10,
   },
   itemActionWrapper: {
-    width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 10,
     marginVertical: 10,
+    width : width 
+    
   },
   jobTitleText: {
     fontSize: 16,
@@ -104,13 +116,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 10,
   },
-  profileImgStyle: {
-    width: 100,
-    height: 100,
-    position: "absolute",
-    top: -50,
-    left: "35%",
-  },
+ 
   averageResumeItem: {
     alignItems: "center",
     justifyContent: "center",
@@ -139,6 +145,8 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginTop: 30,
     alignItems: "center",
+    paddingLeft : 20,
+    paddingRight : 20
   },
   mcWrapper: {
     width: "100%",

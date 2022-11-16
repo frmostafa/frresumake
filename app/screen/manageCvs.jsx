@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import {
   Text,
   View,
@@ -8,17 +8,23 @@ import {
   FlatList,
   ScrollView,
   StatusBar,
-  useColorScheme 
+  useColorScheme,
+  Animated,
+  PanResponder,
 } from "react-native";
-import * as Linking from 'expo-linking';
-import * as FileSystem from 'expo-file-system';
+import * as Linking from "expo-linking";
+import * as FileSystem from "expo-file-system";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
-import {printToFileAsync} from "expo-print";
+// import useDimensions from "../utility/hooks/useDimensions"
+import { printToFileAsync } from "expo-print";
 import * as MediaLibrary from "expo-media-library";
 import * as Sharing from "expo-sharing";
 import Screen from "./screen";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+
 import { MaterialIcons } from "@expo/vector-icons";
 import ManageResumeListItem from "../components/items/manageResumeListItem";
 import { clearCv, cvsContext } from "../context/cvsContext";
@@ -28,26 +34,30 @@ import ManageCvInStorageItem from "../components/items/manageCvInStorageItem";
 import Basicdetail from "./basicdetail";
 import ManageCvSkeleton from "../skeleton/manageCvSkeleton";
 import HtmlGenerator from "../utility/htmlGenerator";
+import { Dimensions } from "react-native";
 
+const NegativeTopViewHeight = -300;
 
 export default function ManageCvs({ navigation }) {
+  const [panViewTop, setPanViewTop] = useState(0);
+  const [topViewHeight, setTopViewHeight] = useState(0);
   const [cvContext, setCvContext] = useContext(cvsContext);
   const [allCv, setAllCv] = useState([]);
   const [noActiveItem, setNoActiveItem] = useState();
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
-  const colorScheme = useColorScheme();
+  const [scrollViewTopValue, setScrollViewTopValue] = useState(-10);
+
+  const scrollViewRef = useRef(null);
+  const panRef = useRef(null);
 
   const createAndSavePDF = async () => {
     const GeneratedHtml = HtmlGenerator(cvContext);
-
     try {
-      const { uri } = await printToFileAsync({ html: GeneratedHtml,
-    });
-    await Sharing.shareAsync(uri);
-    console.log("html data here" , HtmlGenerator(cvContext));
-
-    // if (Platform.OS === "ios") {
+      const { uri } = await printToFileAsync({ html: GeneratedHtml });
+      await Sharing.shareAsync(uri);
+      console.log("html data here", HtmlGenerator(cvContext));
+      // if (Platform.OS === "ios") {
       //await Sharing.shareAsync(uri);
       // } else {
       //   const permission = await MediaLibrary.requestPermissionsAsync();
@@ -149,8 +159,6 @@ export default function ManageCvs({ navigation }) {
     storeData(lArr);
   };
   useEffect(() => {
-    console.log("what is color" , colorScheme);
-
     setIsLoading(true);
     getData();
     let lArr = [...allCv];
@@ -166,26 +174,86 @@ export default function ManageCvs({ navigation }) {
     }, 3000);
   }, [isFocused, noActiveItem]);
 
+  // const getAbsolutePosition = (top) => {
+  //   if (!top) {
+  //     return topViewHeight === 0 ? 250 : topViewHeight - 10;
+  //   } else {
+  //     return 10;
+  //   }
+  // };
   const handlePdfSave = () => {
     createAndSavePDF();
   };
+
   useEffect(() => {
-    // setIsLoading(true);
     handleDeactiveAllItem();
-    // setInterval(()=> {setIsLoading(false)}, 5000);
+    setPanViewTop(topViewHeight === 0 ? 250 : topViewHeight - 10);
   }, []);
 
+  const ifCloseToTop = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    return contentOffset.y == 0;
+  };
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {},
+      onPanResponderMove: (e, gestureState) => {
+        if (panRef.current) {
+          panRef.current.measureInWindow((y, height) => {
+            const panDy = gestureState.dy;
+
+            if (panDy > 1) {
+              console.log("what is height", gestureState.dy);
+              if (height > 250) {
+                setScrollViewTopValue(-10);
+              } else {
+                scrollViewRef.current.setNativeProps({
+                  scrollEnabled: false,
+                });
+                setScrollViewTopValue(gestureState.dy);
+              }
+            } else if (panDy <= 1) {
+              if (height < 50) {
+                setScrollViewTopValue(NegativeTopViewHeight);
+              } else {
+                setScrollViewTopValue(scrollViewTopValue + gestureState.dy);
+              }
+            } else {
+              //   delta = pan.y;
+            }
+          });
+        }
+      },
+      onPanResponderRelease: () => {
+        if (panRef.current) {
+          panRef.current.measureInWindow((y, height) => {
+            if (height > 260) {
+              scrollViewRef.current.setNativeProps({
+                scrollEnabled: false,
+              });
+            } else if (height < 70) {
+              scrollViewRef.current.setNativeProps({
+                scrollEnabled: true,
+              });
+            }
+          });
+        }
+      },
+    })
+  ).current;
+
   return (
-    <Screen>
-    <StatusBar barStyle="light-content" backgroundColor="#6a51ae" />
+    <>
+      <StatusBar barStyle="light-content" backgroundColor="#6a51ae" />
 
       {isLoading ? (
         <ManageCvSkeleton isLoading={isLoading} />
       ) : (
-        <ScrollView>
-          {noActiveItem && (
+        //scrollView
+        <View style={styles.MainContainer}>
+          {/* {noActiveItem && (
             <View style={styles.noActiveWrapper}>
-
               <TouchableOpacity onPress={() => handleAddNewResume()}>
                 <LinearGradient
                   // Background Linear Gradient
@@ -207,45 +275,119 @@ export default function ManageCvs({ navigation }) {
                 </TouchableOpacity>
               )}
             </View>
-          )}
+          )} */}
           <ManageResumeListItem
             onSavePdfResume={handlePdfSave}
             onEditResume={handleEditResume}
             noActive={noActiveItem}
             contextData={cvContext}
             onDeleteCv={handleDeleteCVFromLocalStorage}
+            onsetHeight={(height) => setTopViewHeight(height)}
           />
-          {!noActiveItem && (
+
+          <View
+            style={[{ top: scrollViewTopValue }, styles.topscrollViewWrapper]}
+            ref={panRef}
+            {...panResponder.panHandlers}
+          >
+            <View style={styles.panIconViewContainer}>
+              <View style={styles.panIconView}></View>
+            </View>
             <TouchableOpacity onPress={() => handleAddNewResume()}>
-              <View style={styles.addNewBtn}>
-                <MaterialCommunityIcons
-                  style={styles.addBtnText}
-                  name="plus-circle-outline"
-                  color="black"
-                />
-                <Text style={styles.addBtnText}>add new Resume</Text>
-              </View>
-            </TouchableOpacity>
-          )}
-          <View style={styles.storageCvsFlatList}>
-            {allCv.flatMap((elem) =>
-              !elem.activeCv ? (
-                <ManageCvInStorageItem
-                  key={elem.id}
-                  savedData={elem}
-                  onActiveItemChange={handleChangeActiveItem}
-                  onDelteCv={handleDeleteCVFromLocalStorage}
-                />
-              ) : null
-            )}
+            <View style={styles.addNewBtn}>
+              <MaterialCommunityIcons
+                style={styles.addBtnText}
+                name="plus-circle-outline"
+                color="black"
+              />
+              <Text style={styles.addBtnText}>add new Resume</Text>
+            </View>
+          </TouchableOpacity>
+            <ScrollView
+              onScroll={({ nativeEvent }) => {
+                if (ifCloseToTop(nativeEvent)) {
+                  scrollViewRef.current.setNativeProps({
+                    scrollEnabled: false,
+                  });
+                }
+              }}
+              ref={scrollViewRef}
+              style={[styles.scrollViewWrapper]}
+            >
+              {allCv.flatMap((elem) =>
+                !elem.activeCv ? (
+                  <ManageCvInStorageItem
+                    key={elem.id}
+                    savedData={elem}
+                    onActiveItemChange={handleChangeActiveItem}
+                    onDelteCv={handleDeleteCVFromLocalStorage}
+                  />
+                ) : null
+              )}
+            </ScrollView>
           </View>
-        </ScrollView>
+
+          
+        </View>
       )}
-    </Screen>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  MainContainer: {
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: "#ebebeb",
+    alignItems: "center",
+    height: "100%",
+  },
+  topscrollViewWrapper: {
+    backgroundColor: "#ebebeb",
+    width: "100%",
+    height: Dimensions.get("window").height,
+    borderTopEndRadius: 20,
+    borderTopLeftRadius: 20,
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  scrollViewWrapper: {
+    width: "100%",
+    height: "100%",
+    padding : 10
+  },
+  panIconViewContainer: {
+    width: "100%",
+    alignItems: "center",
+    
+  },
+  panIconView: {
+    width: 40,
+    height: 5,
+    backgroundColor: "#252525",
+    marginTop: 10,
+    marginBottom: 5,
+    borderRadius: 5,
+  },
+  itemsToScroll: {
+    height: 150,
+    width: 200,
+    backgroundColor: "green",
+    marginVertical: 10,
+  },
+
+  swipeBaseView: {
+    // backgroundColor: "#252525",
+    height: 40,
+    width: "100%",
+    alignItems: "center",
+  },
+  swipeWrapper: {
+    marginTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+  },
   noItemBtnText: {
     fontSize: 28,
     fontWeight: "400",
@@ -256,7 +398,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   storageCvsFlatList: {
-    paddingHorizontal: 12,
     width: "100%",
   },
   mcContainer: {
