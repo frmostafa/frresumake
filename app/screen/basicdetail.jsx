@@ -18,9 +18,8 @@ import SummaryFields from "../components/summaryFields";
 import WorkFields from "../components/workFields";
 import Screen from "./screen";
 import DoneCv from "../components/doneCv";
-import Constants from 'expo-constants'
+import Constants from "expo-constants";
 import { Platform } from "react-native";
-
 
 let offset = 0;
 
@@ -100,10 +99,10 @@ export default function Basicdetail() {
   };
   return (
     // <Screen>
-    <KeyboardAvoidingView 
+    <KeyboardAvoidingView
       behavior={Platform.OS == "ios" ? "padding" : "height"}
       style={styles.screenContainer}
-      >
+    >
       <View style={styles.stepsContainer}>
         <Text style={styles.headerText}>FR Resumeake</Text>
         <FlatList
@@ -117,37 +116,35 @@ export default function Basicdetail() {
         ></FlatList>
       </View>
       {/* <View style={styles.addDetailContainer}> */}
-        {stepList.flatMap((step) => {
-          if (step.selected === true) {
-            switch (step.id) {
-              case 0:
-                return <AboutFields key={step.id} onPressNext={handleNext} />;
-                break;
-              case 1:
-                return <ContactFields key={step.id} onPressNext={handleNext} />;
-                break;
-              case 2:
-                return <WorkFields key={step.id} onPressNext={handleNext} />;
-                break;
-              case 3:
-                return (
-                  <EducationFields key={step.id} onPressNext={handleNext} />
-                );
-                break;
-              case 4:
-                return <SkillsFields key={step.id} onPressNext={handleNext} />;
-                break;
-              case 5:
-                return <SummaryFields key={step.id} onPressNext={handleNext} />;
-                break;
-              case 6:
-                return <DoneCv key={step.id} onPressNext={handleNext} />;
-                break;
-            }
+      {stepList.flatMap((step) => {
+        if (step.selected === true) {
+          switch (step.id) {
+            case 0:
+              return <AboutFields key={step.id} onPressNext={handleNext} />;
+              break;
+            case 1:
+              return <ContactFields key={step.id} onPressNext={handleNext} />;
+              break;
+            case 2:
+              return <WorkFields key={step.id} onPressNext={handleNext} />;
+              break;
+            case 3:
+              return <EducationFields key={step.id} onPressNext={handleNext} />;
+              break;
+            case 4:
+              return <SkillsFields key={step.id} onPressNext={handleNext} />;
+              break;
+            case 5:
+              return <SummaryFields key={step.id} onPressNext={handleNext} />;
+              break;
+            case 6:
+              return <DoneCv key={step.id} onPressNext={handleNext} />;
+              break;
           }
-        })}
+        }
+      })}
       {/* </View> */}
-      </KeyboardAvoidingView>
+    </KeyboardAvoidingView>
     // {/* </Screen> */}
   );
 }
@@ -156,9 +153,9 @@ const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
     // justifyContent: "center",
-    padding: '5%',
+    padding: "5%",
     marginTop: Platform.OS === "ios" ? Constants.statusBarHeight : 0,
-    backgroundColor: '#fff'
+    backgroundColor: "#fff",
   },
   headerText: {
     fontSize: 36,

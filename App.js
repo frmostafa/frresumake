@@ -12,6 +12,8 @@ import ManageCvs from "./app/screen/manageCvs";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
 import PanTesting from "./app/screen/panTesting";
+// import ReanimatedTest from "./app/screen/reanimatedTest";
+import "react-native-reanimated";
 
 const Tab = createBottomTabNavigator();
 
@@ -35,7 +37,7 @@ export default function App() {
                   iconName = focused
                     ? "clipboard-edit"
                     : "clipboard-edit-outline";
-                }else if (route.name === "test") {
+                } else if (route.name === "test") {
                   iconName = focused
                     ? "clipboard-edit"
                     : "clipboard-edit-outline";
@@ -52,15 +54,14 @@ export default function App() {
               tabBarInactiveTintColor: "gray",
               tabBarShowLabel: "false",
               header: () => null,
-
             })}
           >
+            {/* <Tab.Screen name="test" component={ReanimatedTest} /> */}
+
             <Tab.Screen name="manage" component={ManageCvs} />
             <Tab.Screen name="make" component={Basicdetail} />
             <Tab.Screen name="show" component={ShowCv} />
             <Tab.Screen name="test" component={PanTesting} />
-
-
           </Tab.Navigator>
         </NavigationContainer>
         <Toast />
