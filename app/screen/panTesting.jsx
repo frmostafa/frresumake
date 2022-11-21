@@ -6,65 +6,113 @@ import { View, StyleSheet, ScrollView, PanResponder } from "react-native";
 import Constant from "expo-constants";
 import { useEffect } from "react";
 
-const NegativeTopViewHeight = -300;
+const NegativeTopViewHeight = -280;
+// let isOnTop = false;
 export default function PanTesting() {
-  const pan = useRef(new Animated.ValueXY()).current;
-
+  let pan = useRef(new Animated.ValueXY()).current;
+  const topLoc = new Animated.ValueXY({ x: 0, y: -50 });
   const [topViewHeight, setTopViewHeight] = useState(0);
   const [scrollViewTopValue, setScrollViewTopValue] = useState(-10);
+  const [panResponderEnabled, setPanResponderEnabled] = useState(true)
   const panRef = useRef(null);
   const scrollViewRef = useRef(null);
+  const [isOnTop, setIsOnTop] = useState(false);
 
+  let wht = new Animated.ValueXY({x:0,y:0});
+  useEffect(()=>{
+    console.log("useeffect alan ejra mishe")
+    if(isOnTop){
+      scrollViewRef.current.setNativeProps({
+        scrollEnabled: true,
+      });
+      setPanResponderEnabled(false);
+    }else{ scrollViewRef.current.setNativeProps({
+      scrollEnabled: false,
+    });
+    setPanResponderEnabled(false);
+  }
+  },[isOnTop])
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
       onPanResponderGrant: () => {
-        // pan.setOffset({
-        //   x: pan.x._value,
-        //   y: pan.y._value,
-        // });
-      },
-      onPanResponderMove: (e, gestureState) => {
         if (panRef.current) {
           panRef.current.measureInWindow((y, height) => {
-            const panDy = gestureState.dy;
+            if(height < 150){
+             
+            setIsOnTop(true);
+            
+
+            }else if(height >= 150){
+             
+            setIsOnTop(false);
+
+            }        
+
+          });
+          }
+        pan.setOffset({
+          x: pan.x._value,
+          y: pan.y._value,
+        });
+      },
+      // onPanResponderMove: Animated.event(
+      //   [
+      //     null,
+      //     { dx: pan.x, dy: pan.y }
+      //   ]
+      // ),
+      onPanResponderMove: (e, gestureState) => {
+       
+            var panDy = pan.y._value;
+            if(panResponderEnabled){
+              Animated.event([null, { dx: pan.x, dy: pan.y }], {
+                useNativeDriver: false,
+              })(e, gestureState);
+            }
+
 
             if (panDy > 1) {
-              console.log("what is height", gestureState.dy);
-              if (height > 250) {
-                setScrollViewTopValue(-10);
-              } else {
-                scrollViewRef.current.setNativeProps({
-                  scrollEnabled: false,
-                });
-                setScrollViewTopValue(gestureState.dy);
-              }
+              console.log("mosbat", panDy)
+
+            
             } else if (panDy <= 1) {
-              if (height < 50) {
-                setScrollViewTopValue(NegativeTopViewHeight);
-              } else {
-                setScrollViewTopValue(scrollViewTopValue + gestureState.dy);
-              }
-            } else {
-              //   delta = pan.y;
+              console.log("manfi", panDy)
+
             }
-          });
-        }
+        
       },
       onPanResponderRelease: () => {
-        if (panRef.current) {
+        pan.flattenOffset();
+         if (panRef.current) {
           panRef.current.measureInWindow((y, height) => {
-            if (height > 260) {
-              scrollViewRef.current.setNativeProps({
-                scrollEnabled: false,
-              });
-            } else if (height < 70) {
-              scrollViewRef.current.setNativeProps({
-                scrollEnabled: true,
-              });
-            }
+            if(height < 150){
+              Animated.spring(            
+                pan,         
+                {toValue:{x:0,y:-280},
+                useNativeDriver : false
+              }   
+
+            ).start();
+            
+            // setPanResponderEnabled(false);
+            setIsOnTop(true);
+            
+
+            }else if(height >= 150){
+              Animated.spring(            
+                pan,         
+                {toValue:{x:0,y:-10},
+                useNativeDriver : false
+              }   
+            ).start();
+            // setPanResponderEnabled(true);
+            setIsOnTop(false);
+
+            }        
+
           });
-        }
+          }
       },
     })
   ).current;
@@ -75,8 +123,13 @@ export default function PanTesting() {
   return (
     <View style={styles.MainContainer}>
       <View style={styles.topViewWrapper}></View>
-      <View
-        style={[{ top: scrollViewTopValue }, styles.topscrollViewWrapper]}
+      <Animated.View
+        style={[
+          styles.topscrollViewWrapper,
+          {
+            transform: [{ translateY: pan.y }],
+          },
+        ]}
         ref={panRef}
         {...panResponder.panHandlers}
       >
@@ -84,17 +137,26 @@ export default function PanTesting() {
           <View style={styles.panIconView}></View>
         </View>
         <ScrollView
+          //scroll
           onScroll={({ nativeEvent }) => {
-            if (ifCloseToTop(nativeEvent)) {
-              scrollViewRef.current.setNativeProps({
-                scrollEnabled: false,
-              });
-            }
+            // if (ifCloseToTop(nativeEvent)) {
+            //   scrollViewRef.current.setNativeProps({
+            //     scrollEnabled: false,
+            //   });
+            //   setPanResponderEnabled(true);
+
+            // }
           }}
+          // onScroll={({ nativeEvent }) => {Animated.event(
+          //   [{nativeEvent: {contentOffset: {y: wht.y}}}],
+          //   {useNativeDriver : true},
+          //   {listener: (event) => console.log(event)}, // Optional async listener
+          // )}}
+
           ref={scrollViewRef}
           style={[styles.scrollViewWrapper]}
         >
-          <View style={styles.itemsToScroll}></View>
+          <View style={styles.itemsToScroll} ></View>
           <View style={styles.itemsToScroll}></View>
           <View style={styles.itemsToScroll}></View>
           <View style={styles.itemsToScroll}></View>
@@ -103,7 +165,7 @@ export default function PanTesting() {
           <View style={styles.itemsToScroll}></View>
           <View style={styles.itemsToScroll}></View>
         </ScrollView>
-      </View>
+      </Animated.View>
     </View>
   );
 }

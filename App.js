@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+// import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import Basicdetail from "./app/screen/basicdetail";
 import { NavigationContainer } from "@react-navigation/native";
@@ -13,7 +13,6 @@ import { useState } from "react";
 import Toast from "react-native-toast-message";
 import PanTesting from "./app/screen/panTesting";
 // import ReanimatedTest from "./app/screen/reanimatedTest";
-import "react-native-reanimated";
 
 const Tab = createBottomTabNavigator();
 
@@ -22,7 +21,7 @@ export default function App() {
 
   return (
     <cvsContext.Provider value={[cvContext, setCvContext]}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
+      {/* <GestureHandlerRootView style={{ flex: 1 }}> */}
         <NavigationContainer>
           <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -61,11 +60,11 @@ export default function App() {
             <Tab.Screen name="manage" component={ManageCvs} />
             <Tab.Screen name="make" component={Basicdetail} />
             <Tab.Screen name="show" component={ShowCv} />
-            <Tab.Screen name="test" component={PanTesting} />
+            {/* <Tab.Screen name="test" component={PanTesting} /> */}
           </Tab.Navigator>
         </NavigationContainer>
         <Toast />
-      </GestureHandlerRootView>
+      {/* </GestureHandlerRootView> */}
     </cvsContext.Provider>
   );
 }

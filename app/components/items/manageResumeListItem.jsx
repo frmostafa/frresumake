@@ -1,19 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet, TouchableOpacity, Image, TouchableWithoutFeedback } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-export default function ManageResumeListItem({ contextData, noActive, onEditResume, onDeleteCv, onSavePdfResume, onsetHeight }) {
+import { Octicons } from "@expo/vector-icons";
+
+export default function ManageResumeListItem({
+  contextData,
+  noActive,
+  onEditResume,
+  onDeleteCv,
+  onSavePdfResume,
+  onsetHeight,
+  onAddNew
+}) {
   const [noActiveItem, setNoActiveItem] = useState(noActive);
   useEffect(() => {
     setNoActiveItem(noActive);
   }, [noActive]);
 
-  const onLayout=(event)=> {
-    const {x, y, height, width} = event.nativeEvent.layout;
+  const onLayout = (event) => {
+    const { x, y, height, width } = event.nativeEvent.layout;
     onsetHeight(height);
-  }
+  };
   return (
     <LinearGradient
       // Background Linear Gradient
@@ -32,40 +49,39 @@ export default function ManageResumeListItem({ contextData, noActive, onEditResu
               <MaterialIcons name="delete-outline" size={24} color="black" />
             </TouchableOpacity>
           </View>
-           <Image
-          style={styles.profileImgStyle}
-          source={require("../../assets/image/user.png")}
-        />
+          <Image
+            style={styles.profileImgStyle}
+            source={require("../../assets/image/user.png")}
+          />
           <Text style={styles.nameText}>
             {contextData.name} {contextData.lName}
           </Text>
           <Text style={styles.jobTitleText}>{contextData.jobTitle}</Text>
           <View style={styles.averageResumeContainer}>
-            <TouchableWithoutFeedback onPress={()=> onEditResume()}>
-            <View style={styles.averageResumeItem}>
-              <Feather name="edit" size={32} color="black" />
-            </View>
+            <TouchableWithoutFeedback onPress={() => onEditResume()}>
+              <View style={styles.averageResumeItem}>
+                <Octicons name="diff-added" size={32} color="black" />
+              </View>
             </TouchableWithoutFeedback>
             <View style={styles.itemSpacer}></View>
-            <TouchableWithoutFeedback onPress={()=> onSavePdfResume()}>
-
-            <View style={styles.averageResumeItem}>
-              <Feather name="download" size={32} color="black"  />
-            </View>
+            <TouchableWithoutFeedback onPress={() => onEditResume()}>
+              <View style={styles.averageResumeItem}>
+                <Feather name="edit" size={32} color="black" />
+              </View>
             </TouchableWithoutFeedback>
+
             <View style={styles.itemSpacer}></View>
 
             <View style={styles.averageResumeItem}>
-              <MaterialCommunityIcons
-                name="share-variant-outline"
-                size={32}
-                color="black"
-              />
+              <TouchableWithoutFeedback onPress={() => onAddNew()}>
+                <View style={styles.averageResumeItem}>
+                  <Feather name="download" size={32} color="black" />
+                </View>
+              </TouchableWithoutFeedback>
               {/* <View style={styles.horiItemSpacer}></View>
               <MaterialIcons name="shopping-bag" size={36} color="black" /> */}
             </View>
           </View>
-          
         </View>
       )}
       {/* </View> */}
@@ -83,8 +99,8 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 10,
-    marginTop : 5
+    paddingHorizontal: 20,
+    paddingTop: 10,
   },
   jobTitleText: {
     fontSize: 18,
@@ -101,7 +117,6 @@ const styles = StyleSheet.create({
   profileImgStyle: {
     width: 100,
     height: 100,
-
   },
   averageResumeItem: {
     alignItems: "center",

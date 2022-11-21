@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import * as Linking from "expo-linking";
 import * as FileSystem from "expo-file-system";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
 // import useDimensions from "../utility/hooks/useDimensions"
 import { printToFileAsync } from "expo-print";
@@ -50,6 +49,7 @@ export default function ManageCvs({ navigation }) {
 
   const scrollViewRef = useRef(null);
   const panRef = useRef(null);
+  const pan = useRef(new Animated.ValueXY()).current;
 
   const createAndSavePDF = async () => {
     const GeneratedHtml = HtmlGenerator(cvContext);
@@ -197,48 +197,59 @@ export default function ManageCvs({ navigation }) {
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {},
+      onPanResponderGrant: () => {
+        pan.setOffset({
+          x: pan.x._value,
+          y: pan.y._value,
+        });
+      },
       onPanResponderMove: (e, gestureState) => {
-        if (panRef.current) {
-          panRef.current.measureInWindow((y, height) => {
-            const panDy = gestureState.dy;
+        Animated.event([null, { dx: pan.x, dy: pan.y }], {
+          useNativeDriver: false,
+        })(e, gestureState);
+        // if (panRef.current) {
+        //   panRef.current.measureInWindow((y, height) => {
+        //     const panDy = gestureState.dy;
 
-            if (panDy > 1) {
-              console.log("what is height", gestureState.dy);
-              if (height > 250) {
-                setScrollViewTopValue(-10);
-              } else {
-                scrollViewRef.current.setNativeProps({
-                  scrollEnabled: false,
-                });
-                setScrollViewTopValue(gestureState.dy);
-              }
-            } else if (panDy <= 1) {
-              if (height < 50) {
-                setScrollViewTopValue(NegativeTopViewHeight);
-              } else {
-                setScrollViewTopValue(scrollViewTopValue + gestureState.dy);
-              }
-            } else {
-              //   delta = pan.y;
-            }
-          });
-        }
+        //     if (panDy > 1) {
+        //       console.log("what is height", gestureState.dy);
+        //       if (height > 250) {
+        //         setScrollViewTopValue(-10);
+        //       } else {
+        //         scrollViewRef.current.setNativeProps({
+        //           scrollEnabled: false,
+        //         });
+        //         setScrollViewTopValue(gestureState.dy);
+        //       }
+        //     } else if (panDy <= 1) {
+        //       if (height < 50) {
+        //         setScrollViewTopValue(NegativeTopViewHeight);
+        //       } else {
+        //         setScrollViewTopValue(scrollViewTopValue + gestureState.dy);
+        //       }
+        //     } else {
+        //       //   delta = pan.y;
+        //     }
+        //   });
+        // }
       },
       onPanResponderRelease: () => {
         if (panRef.current) {
           panRef.current.measureInWindow((y, height) => {
-            if (height > 260) {
-              scrollViewRef.current.setNativeProps({
-                scrollEnabled: false,
-              });
-            } else if (height < 70) {
-              scrollViewRef.current.setNativeProps({
-                scrollEnabled: true,
-              });
+            if (height < 150) {
+              Animated.spring(pan, {
+                toValue: { x: 0, y: -300 },
+                useNativeDriver: false,
+              }).start();
+            } else if (height >= 150) {
+              Animated.spring(pan, {
+                toValue: { x: 0, y: -10 },
+                useNativeDriver: false,
+              }).start();
             }
           });
         }
+        pan.flattenOffset();
       },
     })
   ).current;
@@ -283,37 +294,27 @@ export default function ManageCvs({ navigation }) {
             contextData={cvContext}
             onDeleteCv={handleDeleteCVFromLocalStorage}
             onsetHeight={(height) => setTopViewHeight(height)}
+            onAddNew={handleAddNewResume}
           />
 
-          <View
-            style={[{ top: scrollViewTopValue }, styles.topscrollViewWrapper]}
+          <Animated.View
+            style={[
+              styles.topscrollViewWrapper,
+              {
+                transform: [{ translateY: pan.y }],
+              },
+            ]}
             ref={panRef}
-            {...panResponder.panHandlers}
           >
-            <View style={styles.panIconViewContainer}>
+            <View
+              style={styles.panIconViewContainer}
+              {...panResponder.panHandlers}
+            >
+              <View style={styles.panIconView}></View>
+              <View style={styles.panIconView}></View>
               <View style={styles.panIconView}></View>
             </View>
-            <TouchableOpacity onPress={() => handleAddNewResume()}>
-            <View style={styles.addNewBtn}>
-              <MaterialCommunityIcons
-                style={styles.addBtnText}
-                name="plus-circle-outline"
-                color="black"
-              />
-              <Text style={styles.addBtnText}>add new Resume</Text>
-            </View>
-          </TouchableOpacity>
-            <ScrollView
-              onScroll={({ nativeEvent }) => {
-                if (ifCloseToTop(nativeEvent)) {
-                  scrollViewRef.current.setNativeProps({
-                    scrollEnabled: false,
-                  });
-                }
-              }}
-              ref={scrollViewRef}
-              style={[styles.scrollViewWrapper]}
-            >
+            <ScrollView style={[styles.scrollViewWrapper]}>
               {allCv.flatMap((elem) =>
                 !elem.activeCv ? (
                   <ManageCvInStorageItem
@@ -325,9 +326,7 @@ export default function ManageCvs({ navigation }) {
                 ) : null
               )}
             </ScrollView>
-          </View>
-
-          
+          </Animated.View>
         </View>
       )}
     </>
@@ -338,12 +337,11 @@ const styles = StyleSheet.create({
   MainContainer: {
     display: "flex",
     flexDirection: "column",
-    backgroundColor: "#ebebeb",
     alignItems: "center",
     height: "100%",
   },
   topscrollViewWrapper: {
-    backgroundColor: "#ebebeb",
+    backgroundColor: "#f9f9f9",
     width: "100%",
     height: Dimensions.get("window").height,
     borderTopEndRadius: 20,
@@ -354,19 +352,18 @@ const styles = StyleSheet.create({
   scrollViewWrapper: {
     width: "100%",
     height: "100%",
-    padding : 10
+    padding: 10,
   },
   panIconViewContainer: {
     width: "100%",
     alignItems: "center",
-    
+    marginVertical: 15,
   },
   panIconView: {
-    width: 40,
+    width: 45,
     height: 5,
-    backgroundColor: "#252525",
-    marginTop: 10,
-    marginBottom: 5,
+    backgroundColor: "#e0dbdb",
+    marginBottom: 2,
     borderRadius: 5,
   },
   itemsToScroll: {
